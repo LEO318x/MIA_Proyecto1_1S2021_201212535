@@ -5,13 +5,15 @@
 #include "qdebug.h"
 #include <iostream>
 #include "clases/mkdisk.h"
+#include "clases/rmdisk.h"
 
 
 using namespace std;
 extern int yylineno; //linea actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
-int tam; std::string ruta, mkid1, mkid2;
+std::string pmkdisk[3]; // 0 = size, 1 = path, 2 = f,  3 = u
+std::string prmdisk[8]; //0 = size;
 int yyerror(const char* mens)
 {
 std::cout << mens <<" "<<yytext<< std::endl;
@@ -29,6 +31,7 @@ return 0;
 //QString TEXT;
 char TEXT[256];
 class mkdisk *mkdisk;
+class rmdisk *rmdisk;
 
 }
 //TERMINALES DE TIPO TEXT, SON STRINGS
@@ -111,18 +114,24 @@ LISTACOMANDOS:  COMANDOS LISTACOMANDOS {}
 ;
 
 COMANDOS: MKDISK {}
+        | RMDISK {}
 ;
 
-MKDISK: tk_mkdisk LP_MKDISK {mkdisk *disco=new mkdisk(); disco->test(tam, ruta, mkid1, mkid2);}
+MKDISK: tk_mkdisk LP_MKDISK {mkdisk *disco=new mkdisk(); disco->crearDisco(pmkdisk); std::fill( std::begin( pmkdisk ), std::end( pmkdisk ), 0 );}
 ;
 
 LP_MKDISK: P_MKDISK LP_MKDISK  {}
         | P_MKDISK {}
 ;
 
-P_MKDISK:  tk_menos tk_path tk_igual tk_eruta {ruta = $4;}
-    | tk_menos tk_size tk_igual tk_entero  {tam = atoi($4);}
-    | tk_menos tk_path tk_igual tk_cadena {ruta = $4;}
-    | tk_menos tk_f tk_igual tk_identificador {mkid1 = $4;}
-    | tk_menos tk_u tk_igual tk_identificador {mkid2 = $4;}
+P_MKDISK:  tk_menos tk_size tk_igual tk_entero  {pmkdisk[0] = $4;}
+    | tk_menos tk_path tk_igual tk_eruta {pmkdisk[1] = $4;}
+    | tk_menos tk_path tk_igual tk_cadena {pmkdisk[1] = $4;}
+    | tk_menos tk_f tk_igual tk_identificador {pmkdisk[2]= $4;}
+    | tk_menos tk_u tk_igual tk_identificador {pmkdisk[3] = $4;}
 ;
+
+RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta {rmdisk *disco2 = new rmdisk(); disco2->eliminarDisco($5);}
+    | tk_rmdisk tk_menos tk_path tk_igual tk_cadena {rmdisk *disco2 = new rmdisk(); disco2->eliminarDisco($5);}
+;
+

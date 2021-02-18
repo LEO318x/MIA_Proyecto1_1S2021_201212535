@@ -4,6 +4,7 @@
 #include <parser.h>  // Nuestro parser
 #include <scanner.h>  // Nuestro scanner
 #include <QTextStream>
+#include <chrono>
 using namespace std;
 extern int yyparse(); //
 //static QList<discosmontados> discosenmemoria;
@@ -14,10 +15,7 @@ extern int yylineno;
 
 int main(int argc, char *argv[])
 {
-
     string p="------------------------------Ingrese un comando------------------------------\n";
-
-
 
     QTextStream qtin(stdin);
     QString line;
