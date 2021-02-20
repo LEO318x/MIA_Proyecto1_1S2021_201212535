@@ -3,6 +3,7 @@
 #include "time.h"
 
 
+
 typedef struct partition
 {
     char part_status;

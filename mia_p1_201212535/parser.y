@@ -14,7 +14,8 @@ extern int yylineno; //linea actual donde se encuentra el parser (analisis lexic
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
 std::string p_mkdisk[4]; // 0 = size, 1 = path, 2 = f,  3 = u
-std::string p_fdisk[8]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+std::string p_fdisk[9]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+bool pPrimero = true;
 int yyerror(const char* mens)
 {
 std::cout << mens <<" "<<yytext<< std::endl;
@@ -135,14 +136,14 @@ RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta {rmdisk disco2; disco2.elim
     | tk_rmdisk tk_menos tk_path tk_igual tk_cadena {rmdisk disco2; disco2.eliminarDisco($5);}
 ;
 
-FDISK: tk_fdisk LP_FDISK {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 8; i++)p_fdisk[i].clear();}
+FDISK: tk_fdisk LP_FDISK {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
 ;
 
 LP_FDISK: P_FDISK LP_FDISK {}
         | P_FDISK {}
 ;
 // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
-P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4;}
+P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "size";}}
 
         | tk_menos tk_path tk_igual tk_eruta {p_fdisk[2]=$4;}
         | tk_menos tk_path tk_igual tk_cadena {p_fdisk[2]=$4;}
@@ -154,8 +155,8 @@ P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4;}
         | tk_menos tk_type tk_igual tk_identificador {p_fdisk[3]=$4;}
         | tk_menos tk_f tk_igual tk_identificador {p_fdisk[4]=$4;} 
 
-        | tk_menos tk_delete tk_igual tk_identificador {p_fdisk[5]=$4;}
+        | tk_menos tk_delete tk_igual tk_identificador {p_fdisk[5]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
 
-        | tk_menos tk_add tk_igual tk_entero {p_fdisk[7]=$4;} 
-        | tk_menos tk_add tk_igual tk_negativo {p_fdisk[7]=$4;} 
+        | tk_menos tk_add tk_igual tk_entero {p_fdisk[7]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+        | tk_menos tk_add tk_igual tk_negativo {p_fdisk[7]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
 ;

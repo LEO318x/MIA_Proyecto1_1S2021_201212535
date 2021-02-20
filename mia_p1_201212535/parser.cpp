@@ -84,14 +84,15 @@ extern int yylineno; //linea actual donde se encuentra el parser (analisis lexic
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
 std::string p_mkdisk[4]; // 0 = size, 1 = path, 2 = f,  3 = u
-std::string p_fdisk[8]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+std::string p_fdisk[9]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+bool pPrimero = true;
 int yyerror(const char* mens)
 {
 std::cout << mens <<" "<<yytext<< std::endl;
 return 0;
 }
 
-#line 95 "parser.cpp"
+#line 96 "parser.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -569,10 +570,10 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   108,   108,   111,   112,   115,   116,   117,   120,   123,
-     124,   127,   128,   129,   130,   131,   134,   135,   138,   141,
-     142,   145,   147,   148,   150,   151,   153,   154,   155,   157,
-     159,   160
+       0,   109,   109,   112,   113,   116,   117,   118,   121,   124,
+     125,   128,   129,   130,   131,   132,   135,   136,   139,   142,
+     143,   146,   148,   149,   151,   152,   154,   155,   156,   158,
+     160,   161
 };
 #endif
 
@@ -1561,187 +1562,187 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* INICIO: LISTACOMANDOS  */
-#line 108 "parser.y"
+#line 109 "parser.y"
                        {}
-#line 1567 "parser.cpp"
+#line 1568 "parser.cpp"
     break;
 
   case 3: /* LISTACOMANDOS: COMANDOS LISTACOMANDOS  */
-#line 111 "parser.y"
+#line 112 "parser.y"
                                        {}
-#line 1573 "parser.cpp"
+#line 1574 "parser.cpp"
     break;
 
   case 4: /* LISTACOMANDOS: COMANDOS  */
-#line 112 "parser.y"
+#line 113 "parser.y"
                            {}
-#line 1579 "parser.cpp"
+#line 1580 "parser.cpp"
     break;
 
   case 5: /* COMANDOS: MKDISK  */
-#line 115 "parser.y"
+#line 116 "parser.y"
                  {}
-#line 1585 "parser.cpp"
+#line 1586 "parser.cpp"
     break;
 
   case 6: /* COMANDOS: RMDISK  */
-#line 116 "parser.y"
+#line 117 "parser.y"
                  {}
-#line 1591 "parser.cpp"
+#line 1592 "parser.cpp"
     break;
 
   case 7: /* COMANDOS: FDISK  */
-#line 117 "parser.y"
+#line 118 "parser.y"
                 {}
-#line 1597 "parser.cpp"
+#line 1598 "parser.cpp"
     break;
 
   case 8: /* MKDISK: tk_mkdisk LP_MKDISK  */
-#line 120 "parser.y"
+#line 121 "parser.y"
                             {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
-#line 1603 "parser.cpp"
+#line 1604 "parser.cpp"
     break;
 
   case 9: /* LP_MKDISK: P_MKDISK LP_MKDISK  */
-#line 123 "parser.y"
+#line 124 "parser.y"
                                {}
-#line 1609 "parser.cpp"
+#line 1610 "parser.cpp"
     break;
 
   case 10: /* LP_MKDISK: P_MKDISK  */
-#line 124 "parser.y"
+#line 125 "parser.y"
                    {}
-#line 1615 "parser.cpp"
+#line 1616 "parser.cpp"
     break;
 
   case 11: /* P_MKDISK: tk_menos tk_size tk_igual tk_entero  */
-#line 127 "parser.y"
+#line 128 "parser.y"
                                                 {p_mkdisk[0] = (yyvsp[0].TEXT);}
-#line 1621 "parser.cpp"
+#line 1622 "parser.cpp"
     break;
 
   case 12: /* P_MKDISK: tk_menos tk_path tk_igual tk_eruta  */
-#line 128 "parser.y"
+#line 129 "parser.y"
                                          {p_mkdisk[1] = (yyvsp[0].TEXT);}
-#line 1627 "parser.cpp"
+#line 1628 "parser.cpp"
     break;
 
   case 13: /* P_MKDISK: tk_menos tk_path tk_igual tk_cadena  */
-#line 129 "parser.y"
+#line 130 "parser.y"
                                           {p_mkdisk[1] = (yyvsp[0].TEXT);}
-#line 1633 "parser.cpp"
+#line 1634 "parser.cpp"
     break;
 
   case 14: /* P_MKDISK: tk_menos tk_f tk_igual tk_identificador  */
-#line 130 "parser.y"
+#line 131 "parser.y"
                                               {p_mkdisk[2]= (yyvsp[0].TEXT);}
-#line 1639 "parser.cpp"
+#line 1640 "parser.cpp"
     break;
 
   case 15: /* P_MKDISK: tk_menos tk_u tk_igual tk_identificador  */
-#line 131 "parser.y"
+#line 132 "parser.y"
                                               {p_mkdisk[3] = (yyvsp[0].TEXT);}
-#line 1645 "parser.cpp"
+#line 1646 "parser.cpp"
     break;
 
   case 16: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta  */
-#line 134 "parser.y"
+#line 135 "parser.y"
                                                      {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
-#line 1651 "parser.cpp"
+#line 1652 "parser.cpp"
     break;
 
   case 17: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_cadena  */
-#line 135 "parser.y"
+#line 136 "parser.y"
                                                     {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
-#line 1657 "parser.cpp"
+#line 1658 "parser.cpp"
     break;
 
   case 18: /* FDISK: tk_fdisk LP_FDISK  */
-#line 138 "parser.y"
-                         {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 8; i++)p_fdisk[i].clear();}
-#line 1663 "parser.cpp"
+#line 139 "parser.y"
+                         {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
+#line 1664 "parser.cpp"
     break;
 
   case 19: /* LP_FDISK: P_FDISK LP_FDISK  */
-#line 141 "parser.y"
+#line 142 "parser.y"
                            {}
-#line 1669 "parser.cpp"
+#line 1670 "parser.cpp"
     break;
 
   case 20: /* LP_FDISK: P_FDISK  */
-#line 142 "parser.y"
+#line 143 "parser.y"
                   {}
-#line 1675 "parser.cpp"
+#line 1676 "parser.cpp"
     break;
 
   case 21: /* P_FDISK: tk_menos tk_size tk_igual tk_entero  */
-#line 145 "parser.y"
-                                             {p_fdisk[0]=(yyvsp[0].TEXT);}
-#line 1681 "parser.cpp"
+#line 146 "parser.y"
+                                             {p_fdisk[0]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "size";}}
+#line 1682 "parser.cpp"
     break;
 
   case 22: /* P_FDISK: tk_menos tk_path tk_igual tk_eruta  */
-#line 147 "parser.y"
+#line 148 "parser.y"
                                              {p_fdisk[2]=(yyvsp[0].TEXT);}
-#line 1687 "parser.cpp"
+#line 1688 "parser.cpp"
     break;
 
   case 23: /* P_FDISK: tk_menos tk_path tk_igual tk_cadena  */
-#line 148 "parser.y"
+#line 149 "parser.y"
                                               {p_fdisk[2]=(yyvsp[0].TEXT);}
-#line 1693 "parser.cpp"
+#line 1694 "parser.cpp"
     break;
 
   case 24: /* P_FDISK: tk_menos tk_name tk_igual tk_identificador  */
-#line 150 "parser.y"
+#line 151 "parser.y"
                                                      {p_fdisk[6]=(yyvsp[0].TEXT);}
-#line 1699 "parser.cpp"
+#line 1700 "parser.cpp"
     break;
 
   case 25: /* P_FDISK: tk_menos tk_name tk_igual tk_cadena  */
-#line 151 "parser.y"
+#line 152 "parser.y"
                                               {p_fdisk[6]=(yyvsp[0].TEXT);}
-#line 1705 "parser.cpp"
+#line 1706 "parser.cpp"
     break;
 
   case 26: /* P_FDISK: tk_menos tk_u tk_igual tk_identificador  */
-#line 153 "parser.y"
+#line 154 "parser.y"
                                                   {p_fdisk[1]=(yyvsp[0].TEXT);}
-#line 1711 "parser.cpp"
+#line 1712 "parser.cpp"
     break;
 
   case 27: /* P_FDISK: tk_menos tk_type tk_igual tk_identificador  */
-#line 154 "parser.y"
+#line 155 "parser.y"
                                                      {p_fdisk[3]=(yyvsp[0].TEXT);}
-#line 1717 "parser.cpp"
+#line 1718 "parser.cpp"
     break;
 
   case 28: /* P_FDISK: tk_menos tk_f tk_igual tk_identificador  */
-#line 155 "parser.y"
+#line 156 "parser.y"
                                                   {p_fdisk[4]=(yyvsp[0].TEXT);}
-#line 1723 "parser.cpp"
+#line 1724 "parser.cpp"
     break;
 
   case 29: /* P_FDISK: tk_menos tk_delete tk_igual tk_identificador  */
-#line 157 "parser.y"
-                                                       {p_fdisk[5]=(yyvsp[0].TEXT);}
-#line 1729 "parser.cpp"
+#line 158 "parser.y"
+                                                       {p_fdisk[5]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
+#line 1730 "parser.cpp"
     break;
 
   case 30: /* P_FDISK: tk_menos tk_add tk_igual tk_entero  */
-#line 159 "parser.y"
-                                             {p_fdisk[7]=(yyvsp[0].TEXT);}
-#line 1735 "parser.cpp"
+#line 160 "parser.y"
+                                             {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+#line 1736 "parser.cpp"
     break;
 
   case 31: /* P_FDISK: tk_menos tk_add tk_igual tk_negativo  */
-#line 160 "parser.y"
-                                               {p_fdisk[7]=(yyvsp[0].TEXT);}
-#line 1741 "parser.cpp"
+#line 161 "parser.y"
+                                               {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+#line 1742 "parser.cpp"
     break;
 
 
-#line 1745 "parser.cpp"
+#line 1746 "parser.cpp"
 
       default: break;
     }

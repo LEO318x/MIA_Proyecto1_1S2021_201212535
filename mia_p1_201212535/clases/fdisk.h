@@ -1,6 +1,7 @@
 #ifndef FDISK_H
 #define FDISK_H
-#include <string>
+#include <string.h>
+#include <stdio.h>
 #include <iostream>
 #include "mbr.h"
 #include "funciones.h"
@@ -16,6 +17,7 @@ private:
     string _delete;
     string name;
     string add;
+    string pPrimero;
 
     char pF;
     char pU;
@@ -24,7 +26,7 @@ public:
     fdisk(string []);
     void crearParticion();
     void infoDisco();
-    void validarParametros();
+    bool validarParametros();
     void test();
 };
 
