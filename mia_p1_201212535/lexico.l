@@ -21,7 +21,7 @@
 %option noyywrap
 %option nounput
 
-
+negativo "-"[0-9]+
 entero [0-9]+
 letra [a-zA-Z]+
 identificador {letra}({letra}|{entero}|"_")*
@@ -88,7 +88,7 @@ cadena [\"][^\"\n]*[\"\n]
 "R" {columna=columna+ anterior;  anterior = strlen(yytext); strcpy(yylval.TEXT, yytext);return tk_r;}
 "RUTA" {columna=columna+ anterior;  anterior = strlen(yytext); strcpy(yylval.TEXT, yytext);return tk_ruta;}
 
-
+{negativo} {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return tk_negativo;}
 {entero} {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return tk_entero;}
 {cadena} {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return tk_cadena;}
 {eruta} {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext); return tk_eruta;}

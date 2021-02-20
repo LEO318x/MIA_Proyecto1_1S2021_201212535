@@ -1,12 +1,10 @@
 #ifndef RMDISK_H
 #define RMDISK_H
-
+#include <QTextStream>
 #include <string>
 #include <iostream>
-#include <algorithm>
 #include <cstdio>
-#include <iostream>
-
+#include "funciones.h"
 
 class rmdisk
 {

@@ -6,14 +6,15 @@
 #include <iostream>
 #include "clases/mkdisk.h"
 #include "clases/rmdisk.h"
+#include "clases/fdisk.h"
 
 
 using namespace std;
 extern int yylineno; //linea actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern int columna; //columna actual donde se encuentra el parser (analisis lexico) lo maneja BISON
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
-std::string pmkdisk[3]; // 0 = size, 1 = path, 2 = f,  3 = u
-std::string prmdisk[8]; //0 = size;
+std::string p_mkdisk[4]; // 0 = size, 1 = path, 2 = f,  3 = u
+std::string p_fdisk[8]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
 int yyerror(const char* mens)
 {
 std::cout << mens <<" "<<yytext<< std::endl;
@@ -30,9 +31,6 @@ return 0;
 //char TEXT [256];
 //QString TEXT;
 char TEXT[256];
-class mkdisk *mkdisk;
-class rmdisk *rmdisk;
-
 }
 //TERMINALES DE TIPO TEXT, SON STRINGS
 
@@ -86,6 +84,7 @@ class rmdisk *rmdisk;
 %token<TEXT> tk_r;
 %token<TEXT> tk_ruta;
 %token<TEXT> tk_entero;
+%token<TEXT> tk_negativo;
 %token<TEXT> tk_cadena;
 %token<TEXT> tk_eruta;
 %token<TEXT> tk_identificador;
@@ -115,23 +114,48 @@ LISTACOMANDOS:  COMANDOS LISTACOMANDOS {}
 
 COMANDOS: MKDISK {}
         | RMDISK {}
+        | FDISK {}
 ;
 
-MKDISK: tk_mkdisk LP_MKDISK {mkdisk *disco=new mkdisk(); disco->crearDisco(pmkdisk); std::fill( std::begin( pmkdisk ), std::end( pmkdisk ), 0 );}
+MKDISK: tk_mkdisk LP_MKDISK {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
 ;
 
 LP_MKDISK: P_MKDISK LP_MKDISK  {}
         | P_MKDISK {}
 ;
-
-P_MKDISK:  tk_menos tk_size tk_igual tk_entero  {pmkdisk[0] = $4;}
-    | tk_menos tk_path tk_igual tk_eruta {pmkdisk[1] = $4;}
-    | tk_menos tk_path tk_igual tk_cadena {pmkdisk[1] = $4;}
-    | tk_menos tk_f tk_igual tk_identificador {pmkdisk[2]= $4;}
-    | tk_menos tk_u tk_igual tk_identificador {pmkdisk[3] = $4;}
+// 0 = size, 1 = path, 2 = f,  3 = u
+P_MKDISK:  tk_menos tk_size tk_igual tk_entero  {p_mkdisk[0] = $4;}
+    | tk_menos tk_path tk_igual tk_eruta {p_mkdisk[1] = $4;}
+    | tk_menos tk_path tk_igual tk_cadena {p_mkdisk[1] = $4;}
+    | tk_menos tk_f tk_igual tk_identificador {p_mkdisk[2]= $4;}
+    | tk_menos tk_u tk_igual tk_identificador {p_mkdisk[3] = $4;}
 ;
 
-RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta {rmdisk *disco2 = new rmdisk(); disco2->eliminarDisco($5);}
-    | tk_rmdisk tk_menos tk_path tk_igual tk_cadena {rmdisk *disco2 = new rmdisk(); disco2->eliminarDisco($5);}
+RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta {rmdisk disco2; disco2.eliminarDisco($5);}
+    | tk_rmdisk tk_menos tk_path tk_igual tk_cadena {rmdisk disco2; disco2.eliminarDisco($5);}
 ;
 
+FDISK: tk_fdisk LP_FDISK {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 8; i++)p_fdisk[i].clear();}
+;
+
+LP_FDISK: P_FDISK LP_FDISK {}
+        | P_FDISK {}
+;
+// 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4;}
+
+        | tk_menos tk_path tk_igual tk_eruta {p_fdisk[2]=$4;}
+        | tk_menos tk_path tk_igual tk_cadena {p_fdisk[2]=$4;}
+
+        | tk_menos tk_name tk_igual tk_identificador {p_fdisk[6]=$4;}
+        | tk_menos tk_name tk_igual tk_cadena {p_fdisk[6]=$4;}
+
+        | tk_menos tk_u tk_igual tk_identificador {p_fdisk[1]=$4;}        
+        | tk_menos tk_type tk_igual tk_identificador {p_fdisk[3]=$4;}
+        | tk_menos tk_f tk_igual tk_identificador {p_fdisk[4]=$4;} 
+
+        | tk_menos tk_delete tk_igual tk_identificador {p_fdisk[5]=$4;}
+
+        | tk_menos tk_add tk_igual tk_entero {p_fdisk[7]=$4;} 
+        | tk_menos tk_add tk_igual tk_negativo {p_fdisk[7]=$4;} 
+;

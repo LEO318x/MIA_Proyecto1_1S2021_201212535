@@ -2,12 +2,11 @@
 #define MKDISK_H
 #include <string>
 #include <iostream>
-#include <algorithm>
 #include <bits/stdc++.h> 
 #include <sys/stat.h> 
 #include <sys/types.h> 
 #include "mbr.h"
-#include <time.h>  
+#include "funciones.h"
 
 class mkdisk
 {

@@ -52,13 +52,17 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../mia_p1_201212535/clases/mbr.cpp \
+SOURCES       = ../mia_p1_201212535/clases/fdisk.cpp \
+		../mia_p1_201212535/clases/funciones.cpp \
+		../mia_p1_201212535/clases/mbr.cpp \
 		../mia_p1_201212535/clases/mkdisk.cpp \
 		../mia_p1_201212535/clases/rmdisk.cpp \
 		../mia_p1_201212535/main.cpp \
 		../mia_p1_201212535/parser.cpp \
 		../mia_p1_201212535/scanner.cpp 
-OBJECTS       = mbr.o \
+OBJECTS       = fdisk.o \
+		funciones.o \
+		mbr.o \
 		mkdisk.o \
 		rmdisk.o \
 		main.o \
@@ -142,11 +146,15 @@ DIST          = ../mia_p1_201212535/lexico.l \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../mia_p1_201212535/mia_p1_201212535.pro ../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/mia_p1_201212535.pro ../mia_p1_201212535/clases/fdisk.h \
+		../mia_p1_201212535/clases/funciones.h \
+		../mia_p1_201212535/clases/mbr.h \
 		../mia_p1_201212535/clases/mkdisk.h \
 		../mia_p1_201212535/clases/rmdisk.h \
 		../mia_p1_201212535/parser.h \
-		../mia_p1_201212535/scanner.h ../mia_p1_201212535/clases/mbr.cpp \
+		../mia_p1_201212535/scanner.h ../mia_p1_201212535/clases/fdisk.cpp \
+		../mia_p1_201212535/clases/funciones.cpp \
+		../mia_p1_201212535/clases/mbr.cpp \
 		../mia_p1_201212535/clases/mkdisk.cpp \
 		../mia_p1_201212535/clases/rmdisk.cpp \
 		../mia_p1_201212535/main.cpp \
@@ -333,8 +341,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/mbr.h ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/clases/rmdisk.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/mbr.cpp ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/fdisk.h ../mia_p1_201212535/clases/funciones.h ../mia_p1_201212535/clases/mbr.h ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/clases/rmdisk.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/mbr.cpp ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -382,14 +390,22 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
+fdisk.o: ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/fdisk.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fdisk.o ../mia_p1_201212535/clases/fdisk.cpp
+
+funciones.o: ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o funciones.o ../mia_p1_201212535/clases/funciones.cpp
+
 mbr.o: ../mia_p1_201212535/clases/mbr.cpp ../mia_p1_201212535/clases/mbr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mbr.o ../mia_p1_201212535/clases/mbr.cpp
 
 mkdisk.o: ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkdisk.h \
-		../mia_p1_201212535/clases/mbr.h
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mkdisk.o ../mia_p1_201212535/clases/mkdisk.cpp
 
-rmdisk.o: ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/rmdisk.h
+rmdisk.o: ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/rmdisk.h \
+		../mia_p1_201212535/clases/funciones.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rmdisk.o ../mia_p1_201212535/clases/rmdisk.cpp
 
 main.o: ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.h \
@@ -399,6 +415,8 @@ main.o: ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.h \
 parser.o: ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.h \
 		../mia_p1_201212535/clases/mkdisk.h \
 		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h \
+		../mia_p1_201212535/clases/rmdisk.h \
 		../mia_p1_201212535/parser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../mia_p1_201212535/parser.cpp
 

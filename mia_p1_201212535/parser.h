@@ -104,15 +104,16 @@ extern int yydebug;
     tk_r = 305,                    /* tk_r  */
     tk_ruta = 306,                 /* tk_ruta  */
     tk_entero = 307,               /* tk_entero  */
-    tk_cadena = 308,               /* tk_cadena  */
-    tk_eruta = 309,                /* tk_eruta  */
-    tk_identificador = 310,        /* tk_identificador  */
-    tk_punto = 311,                /* tk_punto  */
-    tk_menos = 312,                /* tk_menos  */
-    tk_guionbajo = 313,            /* tk_guionbajo  */
-    tk_asterisco = 314,            /* tk_asterisco  */
-    tk_interrogacion = 315,        /* tk_interrogacion  */
-    tk_igual = 316                 /* tk_igual  */
+    tk_negativo = 308,             /* tk_negativo  */
+    tk_cadena = 309,               /* tk_cadena  */
+    tk_eruta = 310,                /* tk_eruta  */
+    tk_identificador = 311,        /* tk_identificador  */
+    tk_punto = 312,                /* tk_punto  */
+    tk_menos = 313,                /* tk_menos  */
+    tk_guionbajo = 314,            /* tk_guionbajo  */
+    tk_asterisco = 315,            /* tk_asterisco  */
+    tk_interrogacion = 316,        /* tk_interrogacion  */
+    tk_igual = 317                 /* tk_igual  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -121,17 +122,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 28 "parser.y"
+#line 29 "parser.y"
 
 //se especifican los tipo de valores para los no terminales y lo terminales
 //char TEXT [256];
 //QString TEXT;
 char TEXT[256];
-class mkdisk *mkdisk;
-class rmdisk *rmdisk;
 
-
-#line 135 "parser.h"
+#line 133 "parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

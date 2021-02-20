@@ -17,7 +17,7 @@ typedef struct MBR
 {
     int mbr_tamano;
     char mbr_fecha_creacion[16];
-    int disk_signature;
+    int  mbr_disk_signature;
     char disk_fit;
     partition mbr_partition_1;
     partition mbr_partition_2; 
