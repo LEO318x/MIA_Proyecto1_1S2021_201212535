@@ -158,11 +158,6 @@ void fdisk::crearParticion(){
         if(mbr.mbr_partition[i].part_status == '0'){
 
             
-            if(i != 0){
-
-            }else{
-
-            }
             cout << mbr.mbr_tamano - mbr.mbr_partition[i].part_start - stoi(this->size) << endl;
 
             // Verificamos que haya espacio suficiente antes de crear la partición
