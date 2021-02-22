@@ -50,10 +50,10 @@ std::string toUpper(std::string cadena){
 std::string obtenerFechaHora(){
     time_t rawtime;
     struct tm * timeinfo;
-    char fechaHora [16];
+    char fechaHora [18];
     time (&rawtime);
     timeinfo = localtime (&rawtime);
-    strftime(fechaHora,16,"%d/%m/%y %H:%M",timeinfo);
+    strftime(fechaHora,18,"%d/%m/%y %H:%M:%S",timeinfo);
 
     return fechaHora;
 }

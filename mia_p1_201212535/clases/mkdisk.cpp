@@ -92,14 +92,13 @@ void mkdisk::crearMBR(char pF, int tamanio, const char* ruta){
     partition partVacia;
 
     partVacia.part_status = '0';
-    partVacia.part_start = -1;
-    partVacia.part_size = -1;
+    partVacia.part_start = 0;
+    partVacia.part_size = 0;
 
-    mbr.mbr_partition_1 = partVacia;
-    mbr.mbr_partition_2 = partVacia;
-    mbr.mbr_partition_3 = partVacia;
-    mbr.mbr_partition_4 = partVacia;
-    
+    for(int i = 0 ; i < 4; i++){
+        mbr.mbr_partition[i] = partVacia;
+    }
+   
     //printf("%d\n", sizeof(MBR));
 
     FILE *arch;

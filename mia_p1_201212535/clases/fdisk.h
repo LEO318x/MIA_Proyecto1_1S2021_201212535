@@ -25,9 +25,10 @@ private:
 public:
     fdisk(string []);
     void crearParticion();
+    void eliminarParticion();
     void infoDisco();
     bool validarParametros();
-    void test();
+    void ejecutarFdisk();
 };
 
 #endif // FDISK_H

@@ -513,9 +513,9 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  11
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  31
+#define YYNRULES  32
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  65
+#define YYNSTATES  66
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   317
@@ -572,8 +572,8 @@ static const yytype_uint8 yyrline[] =
 {
        0,   109,   109,   112,   113,   116,   117,   118,   121,   124,
      125,   128,   129,   130,   131,   132,   135,   136,   139,   142,
-     143,   146,   148,   149,   151,   152,   154,   155,   156,   158,
-     160,   161
+     143,   146,   148,   149,   151,   152,   154,   155,   156,   157,
+     159,   161,   162
 };
 #endif
 
@@ -626,7 +626,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-49)
+#define YYPACT_NINF (-48)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -640,13 +640,13 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       3,   -48,   -46,   -30,    27,   -49,     3,   -49,   -49,   -49,
-     -28,   -49,   -48,    -4,   -32,   -49,   -30,   -49,   -49,   -29,
-     -26,   -25,   -24,   -49,   -23,   -22,   -21,   -20,   -19,   -18,
-     -17,   -16,   -15,   -49,    -3,   -35,    -8,    -6,   -33,    -1,
-     -31,    -2,   -45,     0,     1,     2,   -27,   -49,   -49,   -49,
-     -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,
-     -49,   -49,   -49,   -49,   -49
+       4,   -47,   -36,   -27,    29,   -48,     4,   -48,   -48,   -48,
+     -28,   -48,   -47,    -3,   -32,   -48,   -27,   -48,   -48,   -30,
+     -26,   -24,   -23,   -48,   -22,   -21,   -20,   -19,   -18,   -17,
+     -16,   -15,   -14,   -48,    -2,   -34,    -7,    -5,   -31,     0,
+     -29,   -37,   -44,    -1,     1,     2,   -25,   -48,   -48,   -48,
+     -48,   -48,   -48,   -48,   -48,   -48,   -48,   -48,   -48,   -48,
+     -48,   -48,   -48,   -48,   -48,   -48
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -659,15 +659,15 @@ static const yytype_int8 yydefact[] =
        0,     0,     0,     9,     0,     0,     0,     0,     0,     0,
        0,     0,     0,    19,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,    11,    13,    12,
-      14,    15,    17,    16,    21,    23,    22,    27,    25,    24,
-      28,    26,    29,    30,    31
+      14,    15,    17,    16,    21,    23,    22,    28,    27,    25,
+      24,    29,    26,    30,    31,    32
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -49,   -49,    24,   -49,   -49,    19,   -49,   -49,   -49,    16,
-     -49
+     -48,   -48,    27,   -48,   -48,    22,   -48,   -48,   -48,    19,
+     -48
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -682,22 +682,22 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      25,    26,    27,    28,    19,    20,     1,     2,     3,    58,
-      10,    59,    13,    29,    30,    31,    32,    21,    22,    48,
-      49,    52,    53,    55,    56,    63,    64,    17,    14,    24,
-      18,    23,    33,    34,     0,     0,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    46,    50,    47,
-      51,    54,     0,     0,    57,     0,    60,    61,    62
+      25,    26,    27,    28,    19,    20,    57,     1,     2,     3,
+      59,    10,    60,    29,    30,    31,    32,    21,    22,    58,
+      48,    49,    13,    52,    53,    55,    56,    64,    65,    17,
+      24,    14,    34,    18,    23,    33,    35,     0,    36,    37,
+      38,    39,    40,    41,    42,    43,    44,    45,    46,    50,
+      47,    51,    54,     0,     0,    61,     0,    62,    63
 };
 
 static const yytype_int8 yycheck[] =
 {
-      32,    33,    34,    35,    32,    33,     3,     4,     5,    54,
-      58,    56,    58,    45,    46,    47,    48,    45,    46,    54,
-      55,    54,    55,    54,    55,    52,    53,     0,    58,    33,
-       6,    12,    16,    62,    -1,    -1,    62,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    56,    52,
-      56,    52,    -1,    -1,    56,    -1,    56,    56,    56
+      32,    33,    34,    35,    32,    33,    43,     3,     4,     5,
+      54,    58,    56,    45,    46,    47,    48,    45,    46,    56,
+      54,    55,    58,    54,    55,    54,    55,    52,    53,     0,
+      33,    58,    62,     6,    12,    16,    62,    -1,    62,    62,
+      62,    62,    62,    62,    62,    62,    62,    62,    62,    56,
+      52,    56,    52,    -1,    -1,    56,    -1,    56,    56
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -709,8 +709,8 @@ static const yytype_int8 yystos[] =
       33,    45,    46,    68,    33,    32,    33,    34,    35,    45,
       46,    47,    48,    72,    62,    62,    62,    62,    62,    62,
       62,    62,    62,    62,    62,    62,    62,    52,    54,    55,
-      56,    56,    54,    55,    52,    54,    55,    56,    54,    56,
-      56,    56,    56,    52,    53
+      56,    56,    54,    55,    52,    54,    55,    43,    56,    54,
+      56,    56,    56,    56,    52,    53
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -719,7 +719,7 @@ static const yytype_int8 yyr1[] =
        0,    63,    64,    65,    65,    66,    66,    66,    67,    68,
       68,    69,    69,    69,    69,    69,    70,    70,    71,    72,
       72,    73,    73,    73,    73,    73,    73,    73,    73,    73,
-      73,    73
+      73,    73,    73
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -728,7 +728,7 @@ static const yytype_int8 yyr2[] =
        0,     2,     1,     2,     1,     1,     1,     1,     2,     2,
        1,     4,     4,     4,     4,     4,     5,     5,     2,     2,
        1,     4,     4,     4,     4,     4,     4,     4,     4,     4,
-       4,     4
+       4,     4,     4
 };
 
 
@@ -1659,7 +1659,7 @@ yyreduce:
 
   case 18: /* FDISK: tk_fdisk LP_FDISK  */
 #line 139 "parser.y"
-                         {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
+                         {fdisk fdisk(p_fdisk);  fdisk.ejecutarFdisk(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
 #line 1664 "parser.cpp"
     break;
 
@@ -1717,32 +1717,38 @@ yyreduce:
 #line 1718 "parser.cpp"
     break;
 
-  case 28: /* P_FDISK: tk_menos tk_f tk_igual tk_identificador  */
+  case 28: /* P_FDISK: tk_menos tk_type tk_igual tk_p  */
 #line 156 "parser.y"
-                                                  {p_fdisk[4]=(yyvsp[0].TEXT);}
+                                         {p_fdisk[3]=(yyvsp[0].TEXT);}
 #line 1724 "parser.cpp"
     break;
 
-  case 29: /* P_FDISK: tk_menos tk_delete tk_igual tk_identificador  */
-#line 158 "parser.y"
-                                                       {p_fdisk[5]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
+  case 29: /* P_FDISK: tk_menos tk_f tk_igual tk_identificador  */
+#line 157 "parser.y"
+                                                  {p_fdisk[4]=(yyvsp[0].TEXT);}
 #line 1730 "parser.cpp"
     break;
 
-  case 30: /* P_FDISK: tk_menos tk_add tk_igual tk_entero  */
-#line 160 "parser.y"
-                                             {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+  case 30: /* P_FDISK: tk_menos tk_delete tk_igual tk_identificador  */
+#line 159 "parser.y"
+                                                       {p_fdisk[5]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
 #line 1736 "parser.cpp"
     break;
 
-  case 31: /* P_FDISK: tk_menos tk_add tk_igual tk_negativo  */
+  case 31: /* P_FDISK: tk_menos tk_add tk_igual tk_entero  */
 #line 161 "parser.y"
-                                               {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+                                             {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
 #line 1742 "parser.cpp"
     break;
 
+  case 32: /* P_FDISK: tk_menos tk_add tk_igual tk_negativo  */
+#line 162 "parser.y"
+                                               {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+#line 1748 "parser.cpp"
+    break;
 
-#line 1746 "parser.cpp"
+
+#line 1752 "parser.cpp"
 
       default: break;
     }

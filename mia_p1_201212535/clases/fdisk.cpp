@@ -18,9 +18,9 @@ fdisk::fdisk(string parametros[]){
 
 }
 
-void fdisk::test(){
+void fdisk::ejecutarFdisk(){
     //cout << stoi(this->add) << endl;    
-    crearParticion();
+    validarParametros();
     infoDisco();
 }
 
@@ -31,16 +31,16 @@ bool fdisk::validarParametros(){
     bool verificacion = true;
 
     if(this->u == ""){
-        this->pU = 'k';
+        this->pU = 'K';
         tamanio = tamanio * 1024;
-    }else if(toLower(this->u) == "b"){
-        this->pU = 'b';
+    }else if(toUpper(this->u) == "B"){
+        this->pU = 'B';
         tamanio = tamanio;
-    }else if(toLower(this->u) == "k"){
-        this->pU = 'k';
+    }else if(toUpper(this->u) == "K"){
+        this->pU = 'K';
         tamanio = tamanio * 1024;
-    }else if(toLower(this->u) == "m"){
-        this->pU = 'm';
+    }else if(toUpper(this->u) == "M"){
+        this->pU = 'M';
         tamanio = tamanio * 1024 * 1024;
     }else{
         cout << "ERROR: Valor en el parametro -u incorrecta" << endl;
@@ -50,11 +50,11 @@ bool fdisk::validarParametros(){
 
     if(this->f == ""){
         this->pF = 'W';
-    }else if(toLower(this->f) == "BF"){
+    }else if(toUpper(this->f) == "BF"){
         this->pF = 'B';
-    }else if(toLower(this->f) == "FF"){
+    }else if(toUpper(this->f) == "FF"){
         this->pF = 'F';
-    }else if(toLower(this->f) == "WF"){
+    }else if(toUpper(this->f) == "WF"){
         this->pF = 'W';
     }else{
         cout << "ERROR: Valor en el parametro -f incorrecta" << endl;
@@ -62,13 +62,13 @@ bool fdisk::validarParametros(){
     }
 
     if(this->type == ""){
-        this->pType = 'p';
-    }else if(toLower(this->type) == "p"){
-        this->pType = 'p';
-    }else if(toLower(this->type) == "e"){
-        this->pType = 'e';
-    }else if(toLower(this->type) == "l"){
-        this->pType = 'l';
+        this->pType = 'P';
+    }else if(toUpper(this->type) == "P"){
+        this->pType = 'P';
+    }else if(toUpper(this->type) == "E"){
+        this->pType = 'E';
+    }else if(toUpper(this->type) == "L"){
+        this->pType = 'L';
     }else{
         cout << "ERROR: Valor en el parametro -type incorrecta" << endl;
         return verificacion=false;
@@ -89,6 +89,26 @@ bool fdisk::validarParametros(){
         return verificacion=false;
     }
 
+    if (this->pPrimero == "add"){
+
+    }else if(this->pPrimero == "delete"){
+        // Validaciones Eliminar
+        if(this->name == "" || this->path == ""){
+            cout << "ERROR: Faltan parametros para ejecutar -delete (path, name)?" << endl;
+            return verificacion = false;
+        }
+        if(toLower(this->_delete) != "fast" || toLower(this->_delete) != "full"){
+            cout << "ERROR: El parametro -delete tiene un valor no válido" << endl;
+            return verificacion = false;
+        }
+        //Eliminar Particion
+        //eliminarParticion();
+    }else if(this->pPrimero == "size"){
+        //Crear Particion
+        crearParticion();
+    }
+    
+
     archivo = fopen(quitarComillasRuta(this->path).c_str(), "rb+");
     if(archivo == NULL){
         cout << "ERROR: El disco no existe!" << endl;
@@ -103,9 +123,6 @@ void fdisk::crearParticion(){
 
     int tamanioparticion;
     int unidad;
-    if(!validarParametros()){
-        return;
-    } 
 
     FILE *archivo;
     archivo = fopen(quitarComillasRuta(this->path).c_str(), "rb+");
@@ -113,14 +130,64 @@ void fdisk::crearParticion(){
     MBR mbr;
     fread(&mbr, sizeof(MBR), 1, archivo);
 
-    mbr.mbr_partition_1.part_status = '1';
-    mbr.mbr_partition_1.part_type = this->pType;
-    mbr.mbr_partition_1.part_fit = this->pF;
-    mbr.mbr_partition_1.part_start = sizeof(MBR);
-    mbr.mbr_partition_1.part_size = stoi(this->size);
-    strcpy(mbr.mbr_partition_1.part_name, this->name.c_str());
+
+    for(int i = 0; i < 4; i++){
+        //Verificamos si ya existe el nombre
+        if(toLower(mbr.mbr_partition[i].part_name) == toLower(this->name)){
+            cout << "⣿⣷⡶⠚⠉⢀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠠⣴⣿⣿⣿⣿⣶⣤⣤⣤" << endl;
+            cout << "⠿⠥⢶⡏⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⢀⣴⣷⣌⢿⣿⣿⣿⣿⣿⣿⣿" << endl;
+            cout << "⣍⡛⢷⣠⣿⣿⣿⣿⣿⣟⠻⣯⠽⣿⣿⠟⠁⣠⠿⠿⣿⣿⣎⠻⣿⣿⣿⡿⠟⣿" << endl;
+            cout << "⣿⣿⣦⠙⣿⣿⣿⣿⣿⣿⣷⣏⡧⠙⠁⣀⢾⣧    ⠈⣿⡟  ⠙⣫⣵⣶⠇⣋" << endl;
+            cout << "⣿⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⠟⠃⢀⣀⢻⣎⢻⣷⣤⣴⠟  ⣠⣾⣿⢟⣵⡆⢿" << endl;
+            cout << "⣿⣯⣄⢘⢻⣿⣿⣿⣿⡟⠁⢀⣤⡙⢿⣴⣿⣷⡉⠉⢀  ⣴⣿⡿⣡⣿⣿⡿⢆" << endl;
+            cout << "⠿⣿⣧⣤⡘⢿⣿⣿⠏  ⡔⠉⠉⢻⣦⠻⣿⣿⣶⣾⡟⣼⣿⣿⣱⣿⡿⢫⣾⣿" << endl;
+            cout << "⣷⣮⣝⣛⣃⡉⣿⡏  ⣾⣧⡀    ⣿⡇⢘⣿⠋    ⠻⣿⣿⣿⢟⣵⣿⣿⣿" << endl;
+            cout << "⣿⣿⣿⣿⣿⣿⣌⢧⣴⣘⢿⣿⣶⣾⡿⠁⢠⠿⠁⠜    ⣿⣿⣿⣿⡿⣿⣿⣿" << endl;
+            cout << "⣿⣿⣿⣿⣿⣿⣿⣦⡙⣿⣷⣉⡛⠋    ⣰⣾⣦⣤⣤⣤⣿⢿⠟⢋⣴⣿⣿⣿" << endl;
+            cout << "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣌⢿⣿⣿⣿⣿⢰⡿⣻⣿⣿⣿⣿⣿⢃⣰⣫⣾⣿⣿⣿" << endl;
+            cout << "⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠿⠿⠿⠛⢰⣾⡿⢟⣭⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿" << endl;
+            cout << "ERROR: El nombre de la partición ya esta en uso, intenta de nuevo con otro nombre." << endl;
+
+            break;
+        }
+    }
+
+    for(int i = 0; i < 4; i++){  
+
+        //Verificamos que haya alguna particion inactiva para crear la partición
+        if(mbr.mbr_partition[i].part_status == '0'){
+
+            
+            if(i != 0){
+
+            }else{
+
+            }
+            cout << mbr.mbr_tamano - mbr.mbr_partition[i].part_start - stoi(this->size) << endl;
+
+            // Verificamos que haya espacio suficiente antes de crear la partición
+            if((mbr.mbr_tamano - mbr.mbr_partition[i].part_start - stoi(this->size)) < 0){
+                cout << "ERROR: Espacio insuficiente" << endl;
+                break;
+            }
+            mbr.mbr_partition[i].part_status = '1';
+            mbr.mbr_partition[i].part_type = this->pType;
+            mbr.mbr_partition[i].part_fit = this->pF;
+            if(i != 0){
+                mbr.mbr_partition[i].part_start = (mbr.mbr_partition[i-1].part_start+mbr.mbr_partition[i-1].part_size)+1;
+            }else{
+                mbr.mbr_partition[i].part_start = sizeof(MBR)+1;
+            }
+            mbr.mbr_partition[i].part_size = stoi(this->size);
+            strcpy(mbr.mbr_partition[i].part_name, this->name.c_str());
+            break;
+        }else{
+            
+        }
+    }
     
-    fseek(archivo, mbr.mbr_partition_1.part_start, SEEK_SET);
+  
+    fseek(archivo, 0, SEEK_SET);
     fwrite(&mbr, sizeof(MBR), 1, archivo);
     fclose(archivo);
     
@@ -142,18 +209,22 @@ void fdisk::infoDisco(){
         std::cout << "\n#---- INFO DISCO ----#";
         std::cout << "\n# SIGNATURE: " << mbr.mbr_disk_signature;
         std::cout << "\n# TAMAÑO: " << mbr.mbr_tamano;
-        std::cout << "\n# FIT: " << mbr.disk_fit;
+        std::cout << "\n# AJUSTE: " << mbr.disk_fit;
         std::cout << "\n# FECHA CREACIÓN: " << mbr.mbr_fecha_creacion;
         std::cout << "\n#---- FIN DISCO ----#";
         std::cout << "\n\n\n";
         std::cout << "\n#---- INFO PARTICIONES ---#";
-        std::cout << "\n#--> PARTICION 1";
-        std::cout << "\n# NOMBRE: " << mbr.mbr_partition_1.part_name;
-        std::cout << "\n# ESTADO: " << mbr.mbr_partition_1.part_status;
-        std::cout << "\n# TIPO: " << mbr.mbr_partition_1.part_type;
-        std::cout << "\n# AJUSTE: " << mbr.mbr_partition_1.part_fit;
-        std::cout << "\n# TAMAÑO: " << mbr.mbr_partition_1.part_size;
-        std::cout << "\n# INICIA: " << mbr.mbr_partition_1.part_start;
+        for (int i = 0; i < 4 ; i++){
+        std::cout << "\n#----> PARTICION <----"+std::to_string(i+1);
+        std::cout << "\n# NOMBRE: " << mbr.mbr_partition[i].part_name;
+        std::cout << "\n# ESTADO: " << mbr.mbr_partition[i].part_status;
+        std::cout << "\n# TIPO: " << mbr.mbr_partition[i].part_type;
+        std::cout << "\n# AJUSTE: " << mbr.mbr_partition[i].part_fit;
+        std::cout << "\n# TAMAÑO: " << mbr.mbr_partition[i].part_size;
+        std::cout << "\n# INICIA: " << mbr.mbr_partition[i].part_start;
+        std::cout << "\n----> FIN PARTICION <----\n\n\n";
+        }
+        
     }else{
         cout << "Disco no existe perro! >:'v" << endl;
         return;

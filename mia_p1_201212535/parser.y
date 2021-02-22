@@ -136,7 +136,7 @@ RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta {rmdisk disco2; disco2.elim
     | tk_rmdisk tk_menos tk_path tk_igual tk_cadena {rmdisk disco2; disco2.eliminarDisco($5);}
 ;
 
-FDISK: tk_fdisk LP_FDISK {fdisk fdisk(p_fdisk);  fdisk.test(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
+FDISK: tk_fdisk LP_FDISK {fdisk fdisk(p_fdisk);  fdisk.ejecutarFdisk(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
 ;
 
 LP_FDISK: P_FDISK LP_FDISK {}
@@ -153,6 +153,7 @@ P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4; if(pPrimero){pPrime
 
         | tk_menos tk_u tk_igual tk_identificador {p_fdisk[1]=$4;}        
         | tk_menos tk_type tk_igual tk_identificador {p_fdisk[3]=$4;}
+        | tk_menos tk_type tk_igual tk_p {p_fdisk[3]=$4;}
         | tk_menos tk_f tk_igual tk_identificador {p_fdisk[4]=$4;} 
 
         | tk_menos tk_delete tk_igual tk_identificador {p_fdisk[5]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
