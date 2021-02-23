@@ -12,6 +12,7 @@ TEMPLATE = app
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    clases/exec.cpp \
     clases/fdisk.cpp \
     clases/funciones.cpp \
     clases/mbr.cpp \
@@ -28,6 +29,7 @@ DISTFILES += \
         parser.y
 
 HEADERS += \
+	clases/exec.h \
 	clases/fdisk.h \
 	clases/funciones.h \
 	clases/mbr.h \

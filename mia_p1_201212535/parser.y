@@ -7,6 +7,7 @@
 #include "clases/mkdisk.h"
 #include "clases/rmdisk.h"
 #include "clases/fdisk.h"
+#include "clases/exec.h"
 
 
 using namespace std;
@@ -15,6 +16,7 @@ extern int columna; //columna actual donde se encuentra el parser (analisis lexi
 extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo maneja BISON
 std::string p_mkdisk[4]; // 0 = size, 1 = path, 2 = f,  3 = u
 std::string p_fdisk[9]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
+std::string p_exec[1]; // 0 = ruta
 bool pPrimero = true;
 int yyerror(const char* mens)
 {
@@ -116,6 +118,8 @@ LISTACOMANDOS:  COMANDOS LISTACOMANDOS {}
 COMANDOS: MKDISK {}
         | RMDISK {}
         | FDISK {}
+        | EXEC {}
+        | error {}
 ;
 
 MKDISK: tk_mkdisk LP_MKDISK {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
@@ -160,4 +164,11 @@ P_FDISK: tk_menos tk_size tk_igual tk_entero {p_fdisk[0]=$4; if(pPrimero){pPrime
 
         | tk_menos tk_add tk_igual tk_entero {p_fdisk[7]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
         | tk_menos tk_add tk_igual tk_negativo {p_fdisk[7]=$4; if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+;
+
+EXEC: tk_exec P_EXEC {exec exec(p_exec); exec.ejecutar(); p_exec[0].clear();}
+;
+
+P_EXEC: tk_menos tk_path tk_igual tk_cadena {p_exec[0] = $4;}
+        | tk_menos tk_path tk_igual tk_eruta {p_exec[0] = $4;}
 ;

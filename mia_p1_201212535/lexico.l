@@ -29,6 +29,7 @@ eruta ([/]([^\n' '])*)
 cadena [\"][^\"\n]*[\"\n]
 
 
+
 %x COM
 
 
@@ -101,7 +102,10 @@ cadena [\"][^\"\n]*[\"\n]
 "?" {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext);return tk_interrogacion;}
 "=" {columna=columna+ anterior;  anterior = strlen(yytext);strcpy(yylval.TEXT, yytext);return tk_igual;}
 
+#.* {}
 "\n" {linea++; columna=0; anterior=0;}
+"\r" {linea++; columna=0; anterior=0;}
+"\r\n" {linea++; columna=0; anterior=0;}
 [[:blank:]] { columna++; }
 
 

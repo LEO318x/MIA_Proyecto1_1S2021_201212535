@@ -26,6 +26,7 @@ public:
     fdisk(string []);
     void crearParticion();
     void eliminarParticion();
+    void testEspacioDisco(int inicia, int tamanio, string ruta, char buf);
     void infoDisco();
     bool validarParametros();
     void ejecutarFdisk();

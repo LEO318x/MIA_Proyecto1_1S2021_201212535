@@ -123,7 +123,7 @@ void fdisk::crearParticion(){
 
     int tamanioparticion;
     int unidad;
-
+    bool verificacion = true;
     FILE *archivo;
     archivo = fopen(quitarComillasRuta(this->path).c_str(), "rb+");
     fseek(archivo, 0, SEEK_SET);
@@ -134,34 +134,41 @@ void fdisk::crearParticion(){
     for(int i = 0; i < 4; i++){
         //Verificamos si ya existe el nombre
         if(toLower(mbr.mbr_partition[i].part_name) == toLower(this->name)){
-            cout << "⣿⣷⡶⠚⠉⢀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠠⣴⣿⣿⣿⣿⣶⣤⣤⣤" << endl;
-            cout << "⠿⠥⢶⡏⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⢀⣴⣷⣌⢿⣿⣿⣿⣿⣿⣿⣿" << endl;
-            cout << "⣍⡛⢷⣠⣿⣿⣿⣿⣿⣟⠻⣯⠽⣿⣿⠟⠁⣠⠿⠿⣿⣿⣎⠻⣿⣿⣿⡿⠟⣿" << endl;
-            cout << "⣿⣿⣦⠙⣿⣿⣿⣿⣿⣿⣷⣏⡧⠙⠁⣀⢾⣧    ⠈⣿⡟  ⠙⣫⣵⣶⠇⣋" << endl;
-            cout << "⣿⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⠟⠃⢀⣀⢻⣎⢻⣷⣤⣴⠟  ⣠⣾⣿⢟⣵⡆⢿" << endl;
-            cout << "⣿⣯⣄⢘⢻⣿⣿⣿⣿⡟⠁⢀⣤⡙⢿⣴⣿⣷⡉⠉⢀  ⣴⣿⡿⣡⣿⣿⡿⢆" << endl;
-            cout << "⠿⣿⣧⣤⡘⢿⣿⣿⠏  ⡔⠉⠉⢻⣦⠻⣿⣿⣶⣾⡟⣼⣿⣿⣱⣿⡿⢫⣾⣿" << endl;
-            cout << "⣷⣮⣝⣛⣃⡉⣿⡏  ⣾⣧⡀    ⣿⡇⢘⣿⠋    ⠻⣿⣿⣿⢟⣵⣿⣿⣿" << endl;
-            cout << "⣿⣿⣿⣿⣿⣿⣌⢧⣴⣘⢿⣿⣶⣾⡿⠁⢠⠿⠁⠜    ⣿⣿⣿⣿⡿⣿⣿⣿" << endl;
-            cout << "⣿⣿⣿⣿⣿⣿⣿⣦⡙⣿⣷⣉⡛⠋    ⣰⣾⣦⣤⣤⣤⣿⢿⠟⢋⣴⣿⣿⣿" << endl;
-            cout << "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣌⢿⣿⣿⣿⣿⢰⡿⣻⣿⣿⣿⣿⣿⢃⣰⣫⣾⣿⣿⣿" << endl;
-            cout << "⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠿⠿⠿⠛⢰⣾⡿⢟⣭⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿" << endl;
             cout << "ERROR: El nombre de la partición ya esta en uso, intenta de nuevo con otro nombre." << endl;
-
+            verificacion = false;
             break;
         }
     }
 
+    for (int i=0; i<4; i++){
+        //Verificamos si ya existe una extendida.
+        if(mbr.mbr_partition[i].part_type == 'E' && this->pType == 'E'){
+            cout << "ERROR: Ya existe una partición extendida." << endl;
+            verificacion = false;
+            break;
+        }
+    }
+
+    if (!verificacion){
+        return;
+    }
+    
+    int auxSuma = 0;
+    int espacioLibre = 0;
     for(int i = 0; i < 4; i++){  
 
+        auxSuma += mbr.mbr_partition[i].part_size;
         //Verificamos que haya alguna particion inactiva para crear la partición
         if(mbr.mbr_partition[i].part_status == '0'){
-
             
-            cout << mbr.mbr_tamano - mbr.mbr_partition[i].part_start - stoi(this->size) << endl;
-
             // Verificamos que haya espacio suficiente antes de crear la partición
-            if((mbr.mbr_tamano - mbr.mbr_partition[i].part_start - stoi(this->size)) < 0){
+            espacioLibre = mbr.mbr_tamano - sizeof(MBR) - auxSuma - stoi(this->size);            
+            cout << espacioLibre << endl;
+            cout << "tamaño total: " << to_string(mbr.mbr_tamano) << endl;
+            cout << "MBR: " << to_string(sizeof(MBR)) << endl;
+            cout << "AuxSuma: " << to_string(auxSuma) << endl;
+            cout << "tamaño particion: " << this->size << endl;
+            if(espacioLibre < 0){
                 cout << "ERROR: Espacio insuficiente" << endl;
                 break;
             }
@@ -169,9 +176,9 @@ void fdisk::crearParticion(){
             mbr.mbr_partition[i].part_type = this->pType;
             mbr.mbr_partition[i].part_fit = this->pF;
             if(i != 0){
-                mbr.mbr_partition[i].part_start = (mbr.mbr_partition[i-1].part_start+mbr.mbr_partition[i-1].part_size)+1;
+                mbr.mbr_partition[i].part_start = (mbr.mbr_partition[i-1].part_start+mbr.mbr_partition[i-1].part_size);
             }else{
-                mbr.mbr_partition[i].part_start = sizeof(MBR)+1;
+                mbr.mbr_partition[i].part_start = sizeof(MBR);
             }
             mbr.mbr_partition[i].part_size = stoi(this->size);
             strcpy(mbr.mbr_partition[i].part_name, this->name.c_str());
@@ -185,7 +192,21 @@ void fdisk::crearParticion(){
     fseek(archivo, 0, SEEK_SET);
     fwrite(&mbr, sizeof(MBR), 1, archivo);
     fclose(archivo);
+    if(mbr.mbr_partition[0].part_status == '1'){
+        cout << "entrooooooooooooooo a 1" << endl;
+        testEspacioDisco(mbr.mbr_partition[0].part_start, mbr.mbr_partition[0].part_size, this->path, '1');
+    }
+    if(mbr.mbr_partition[1].part_status == '1'){
+        cout << "entrooooooooooooooo a 2" << endl;
+        testEspacioDisco(mbr.mbr_partition[1].part_start, mbr.mbr_partition[1].part_size, this->path, '2');
+    }
+    if(mbr.mbr_partition[2].part_status == '1'){
+        cout << "entrooooooooooooooo a 2" << endl;
+        testEspacioDisco(mbr.mbr_partition[2].part_start, mbr.mbr_partition[2].part_size, this->path, '3');
+    }
+
     
+
 
 
 }
@@ -226,4 +247,13 @@ void fdisk::infoDisco(){
     }
 }
 
-
+void fdisk::testEspacioDisco(int inicia, int tamanio, string ruta, char buf){
+    char buffer = buf;
+    FILE *archivo;
+    archivo = fopen(quitarComillasRuta(this->path).c_str(), "rb+");
+    fseek(archivo, inicia, SEEK_SET);
+    for(int i=0; i < tamanio; i++){
+        fwrite(&buffer, sizeof(buffer), 1, archivo);
+    }
+    fclose(archivo);
+}
