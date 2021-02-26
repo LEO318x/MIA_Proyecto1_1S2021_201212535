@@ -8,6 +8,14 @@ std::string quitarComillasRuta(std::string ruta){
     return rutaAux;
 }
 
+std::string quitarComillasTexto(std::string texto){
+    std::string textoAux = texto;
+    //Eliminamos las comillas del texto
+    textoAux.erase(remove(textoAux.begin(), textoAux.end(), '\"'), textoAux.end());
+
+    return textoAux;
+}
+
 std::string obtenerRutaSinArchivo(std::string ruta){
     std::string rutaAux = quitarComillasRuta(ruta);
     std::string rutaSinNombreArchivo;
@@ -65,3 +73,5 @@ int obtenerNumeroRandom(){
 
     return numero;
 }
+
+

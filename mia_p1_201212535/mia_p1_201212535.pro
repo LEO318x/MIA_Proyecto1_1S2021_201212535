@@ -17,7 +17,9 @@ SOURCES += \
     clases/funciones.cpp \
     clases/mbr.cpp \
     clases/mkdisk.cpp \
+    clases/mount.cpp \
     clases/rmdisk.cpp \
+    clases/unmount.cpp \
         main.cpp \
 	parser.cpp \
 	scanner.cpp
@@ -34,7 +36,9 @@ HEADERS += \
 	clases/funciones.h \
 	clases/mbr.h \
 	clases/mkdisk.h \
+	clases/mount.h \
 	clases/rmdisk.h \
+	clases/unmount.h \
 	parser.h \
 	scanner.h
 

@@ -6,6 +6,7 @@
 
 
     std::string quitarComillasRuta(std::string ruta);
+    std::string quitarComillasTexto(std::string ruta);
     std::string obtenerRutaSinArchivo(std::string ruta);
     std::string extraerNombreArchivo(std::string ruta);
     std::string toLower(std::string cadena);

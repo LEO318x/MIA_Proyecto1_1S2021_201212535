@@ -5,6 +5,9 @@
 #include <scanner.h>  // Nuestro scanner
 #include <QTextStream>
 #include <chrono>
+#include <vector>
+#include "clases/mount.h"
+
 using namespace std;
 extern int yyparse(); //
 //static QList<discosmontados> discosenmemoria;
@@ -12,6 +15,8 @@ int p;
 extern int linea; // Linea del token
 extern int columna; // Columna de los tokens
 extern int yylineno;
+vector <Disco> registro;
+int auxDiscoID = 0;
 
 int main(int argc, char *argv[])
 {

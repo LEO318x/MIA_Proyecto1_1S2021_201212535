@@ -113,7 +113,8 @@ extern int yydebug;
     tk_guionbajo = 314,            /* tk_guionbajo  */
     tk_asterisco = 315,            /* tk_asterisco  */
     tk_interrogacion = 316,        /* tk_interrogacion  */
-    tk_igual = 317                 /* tk_igual  */
+    tk_igual = 317,                /* tk_igual  */
+    tk_comentario = 318            /* tk_comentario  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -122,14 +123,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 32 "parser.y"
+#line 36 "parser.y"
 
 //se especifican los tipo de valores para los no terminales y lo terminales
 //char TEXT [256];
 //QString TEXT;
 char TEXT[256];
 
-#line 133 "parser.h"
+#line 134 "parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

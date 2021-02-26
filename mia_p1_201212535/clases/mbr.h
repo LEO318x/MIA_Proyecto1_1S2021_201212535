@@ -4,7 +4,7 @@
 
 
 
-typedef struct partition
+typedef struct
 {
     char part_status;
     char part_type;
@@ -12,16 +12,16 @@ typedef struct partition
     int  part_start;
     int  part_size;
     char part_name[16];
-};
+}Partition;
 
-typedef struct MBR
+typedef struct
 {
     int mbr_tamano;
     char mbr_fecha_creacion[18];
     int  mbr_disk_signature;
     char disk_fit;
-    partition mbr_partition[4];    
-};
+    Partition mbr_partition[4];    
+}MBR;
 
 
 class mbr

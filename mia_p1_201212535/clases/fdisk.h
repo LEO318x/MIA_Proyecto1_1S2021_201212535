@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 #include "mbr.h"
 #include "funciones.h"
 using namespace std;
@@ -22,6 +23,13 @@ private:
     char pF;
     char pU;
     char pType;
+
+    struct espacioLibre
+    {
+        int inicio;
+        int tamanio;
+    };
+    
 public:
     fdisk(string []);
     void crearParticion();

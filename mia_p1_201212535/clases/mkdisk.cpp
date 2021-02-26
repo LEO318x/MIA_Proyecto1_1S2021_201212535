@@ -89,7 +89,7 @@ void mkdisk::crearMBR(char pF, int tamanio, const char* ruta){
     mbr.mbr_disk_signature = obtenerNumeroRandom();
     mbr.disk_fit = pF;
 
-    partition partVacia;
+    Partition partVacia;
 
     partVacia.part_status = '0';
     partVacia.part_start = 0;

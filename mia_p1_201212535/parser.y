@@ -8,6 +8,8 @@
 #include "clases/rmdisk.h"
 #include "clases/fdisk.h"
 #include "clases/exec.h"
+#include "clases/mount.h"
+#include "clases/unmount.h"
 
 
 using namespace std;
@@ -17,6 +19,8 @@ extern char *yytext; //lexema actual donde esta el parser (analisis lexico) lo m
 std::string p_mkdisk[4]; // 0 = size, 1 = path, 2 = f,  3 = u
 std::string p_fdisk[9]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delete, 6 = name, 7 = add
 std::string p_exec[1]; // 0 = ruta
+std::string p_mount[2]; // 0 = path, 1 = name
+std::string p_unmount[1]; // 0 = id
 bool pPrimero = true;
 int yyerror(const char* mens)
 {
@@ -97,7 +101,7 @@ char TEXT[256];
 %token<TEXT> tk_asterisco;
 %token<TEXT> tk_interrogacion;
 %token<TEXT> tk_igual;
-
+%token<TEXT> tk_comentario;
 
 //%type<mdisk> COMANDOMKDISK; // lista de instrucciones
 
@@ -119,8 +123,12 @@ COMANDOS: MKDISK {}
         | RMDISK {}
         | FDISK {}
         | EXEC {}
-        | error {}
+        | MOUNT {}
+        | UNMOUNT {}
+        | COMENTARIO {}
 ;
+
+COMENTARIO: tk_comentario;
 
 MKDISK: tk_mkdisk LP_MKDISK {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
 ;
@@ -171,4 +179,23 @@ EXEC: tk_exec P_EXEC {exec exec(p_exec); exec.ejecutar(); p_exec[0].clear();}
 
 P_EXEC: tk_menos tk_path tk_igual tk_cadena {p_exec[0] = $4;}
         | tk_menos tk_path tk_igual tk_eruta {p_exec[0] = $4;}
+;
+
+MOUNT: tk_mount LP_MOUNT {mount mount(p_mount); mount.ejecutar(); p_mount[0].clear(); p_mount[1].clear();}
+;
+
+LP_MOUNT: P_MOUNT LP_MOUNT {}
+        | P_MOUNT {}
+
+P_MOUNT: tk_menos tk_path tk_igual tk_cadena {p_mount[0] = $4;}
+        | tk_menos tk_path tk_igual tk_eruta {p_mount[0] = $4;}
+        | tk_menos tk_name tk_igual tk_identificador {p_mount[1] = $4;}
+        | tk_menos tk_name tk_igual tk_cadena {p_mount[1] = $4;}
+        
+;
+
+UNMOUNT: tk_unmount P_UNMOUNT {unmount unmount(p_unmount); unmount.ejecutar(); p_unmount[0].clear();}
+;
+
+P_UNMOUNT: tk_menos tk_id tk_igual tk_identificador {p_unmount[0] = $4;}
 ;
