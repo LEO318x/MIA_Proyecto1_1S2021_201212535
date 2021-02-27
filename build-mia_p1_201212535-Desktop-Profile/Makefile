@@ -52,11 +52,25 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../mia_p1_201212535/clases/mkdisk.cpp \
+SOURCES       = ../mia_p1_201212535/clases/exec.cpp \
+		../mia_p1_201212535/clases/fdisk.cpp \
+		../mia_p1_201212535/clases/funciones.cpp \
+		../mia_p1_201212535/clases/mbr.cpp \
+		../mia_p1_201212535/clases/mkdisk.cpp \
+		../mia_p1_201212535/clases/mount.cpp \
+		../mia_p1_201212535/clases/rmdisk.cpp \
+		../mia_p1_201212535/clases/unmount.cpp \
 		../mia_p1_201212535/main.cpp \
 		../mia_p1_201212535/parser.cpp \
 		../mia_p1_201212535/scanner.cpp 
-OBJECTS       = mkdisk.o \
+OBJECTS       = exec.o \
+		fdisk.o \
+		funciones.o \
+		mbr.o \
+		mkdisk.o \
+		mount.o \
+		rmdisk.o \
+		unmount.o \
 		main.o \
 		parser.o \
 		scanner.o
@@ -119,6 +133,7 @@ DIST          = ../mia_p1_201212535/lexico.l \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		../mia_p1_201212535/.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -139,9 +154,23 @@ DIST          = ../mia_p1_201212535/lexico.l \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../mia_p1_201212535/mia_p1_201212535.pro ../mia_p1_201212535/clases/mkdisk.h \
+		../mia_p1_201212535/mia_p1_201212535.pro ../mia_p1_201212535/clases/exec.h \
+		../mia_p1_201212535/clases/fdisk.h \
+		../mia_p1_201212535/clases/funciones.h \
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/mkdisk.h \
+		../mia_p1_201212535/clases/mount.h \
+		../mia_p1_201212535/clases/rmdisk.h \
+		../mia_p1_201212535/clases/unmount.h \
 		../mia_p1_201212535/parser.h \
-		../mia_p1_201212535/scanner.h ../mia_p1_201212535/clases/mkdisk.cpp \
+		../mia_p1_201212535/scanner.h ../mia_p1_201212535/clases/exec.cpp \
+		../mia_p1_201212535/clases/fdisk.cpp \
+		../mia_p1_201212535/clases/funciones.cpp \
+		../mia_p1_201212535/clases/mbr.cpp \
+		../mia_p1_201212535/clases/mkdisk.cpp \
+		../mia_p1_201212535/clases/mount.cpp \
+		../mia_p1_201212535/clases/rmdisk.cpp \
+		../mia_p1_201212535/clases/unmount.cpp \
 		../mia_p1_201212535/main.cpp \
 		../mia_p1_201212535/parser.cpp \
 		../mia_p1_201212535/scanner.cpp
@@ -214,6 +243,7 @@ Makefile: ../mia_p1_201212535/mia_p1_201212535.pro /usr/lib/x86_64-linux-gnu/qt5
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -293,6 +323,7 @@ Makefile: ../mia_p1_201212535/mia_p1_201212535.pro /usr/lib/x86_64-linux-gnu/qt5
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -329,8 +360,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.h ../mia_p1_201212535/clases/fdisk.h ../mia_p1_201212535/clases/funciones.h ../mia_p1_201212535/clases/mbr.h ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/clases/mount.h ../mia_p1_201212535/clases/rmdisk.h ../mia_p1_201212535/clases/unmount.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.cpp ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/mbr.cpp ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mount.cpp ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/unmount.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -378,16 +409,57 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-mkdisk.o: ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkdisk.h
+exec.o: ../mia_p1_201212535/clases/exec.cpp ../mia_p1_201212535/clases/exec.h \
+		../mia_p1_201212535/parser.h \
+		../mia_p1_201212535/scanner.h \
+		../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o exec.o ../mia_p1_201212535/clases/exec.cpp
+
+fdisk.o: ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/fdisk.h \
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fdisk.o ../mia_p1_201212535/clases/fdisk.cpp
+
+funciones.o: ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o funciones.o ../mia_p1_201212535/clases/funciones.cpp
+
+mbr.o: ../mia_p1_201212535/clases/mbr.cpp ../mia_p1_201212535/clases/mbr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mbr.o ../mia_p1_201212535/clases/mbr.cpp
+
+mkdisk.o: ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkdisk.h \
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mkdisk.o ../mia_p1_201212535/clases/mkdisk.cpp
 
+mount.o: ../mia_p1_201212535/clases/mount.cpp ../mia_p1_201212535/clases/mount.h \
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mount.o ../mia_p1_201212535/clases/mount.cpp
+
+rmdisk.o: ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/rmdisk.h \
+		../mia_p1_201212535/clases/funciones.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rmdisk.o ../mia_p1_201212535/clases/rmdisk.cpp
+
+unmount.o: ../mia_p1_201212535/clases/unmount.cpp ../mia_p1_201212535/clases/unmount.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o unmount.o ../mia_p1_201212535/clases/unmount.cpp
+
 main.o: ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.h \
-		../mia_p1_201212535/scanner.h
+		../mia_p1_201212535/scanner.h \
+		../mia_p1_201212535/clases/mount.h \
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../mia_p1_201212535/main.cpp
 
 parser.o: ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.h \
 		../mia_p1_201212535/clases/mkdisk.h \
-		../mia_p1_201212535/parser.h
+		../mia_p1_201212535/clases/mbr.h \
+		../mia_p1_201212535/clases/funciones.h \
+		../mia_p1_201212535/clases/rmdisk.h \
+		../mia_p1_201212535/clases/fdisk.h \
+		../mia_p1_201212535/clases/exec.h \
+		../mia_p1_201212535/parser.h \
+		../mia_p1_201212535/clases/mount.h \
+		../mia_p1_201212535/clases/unmount.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../mia_p1_201212535/parser.cpp
 
 scanner.o: ../mia_p1_201212535/scanner.cpp ../mia_p1_201212535/parser.h

@@ -30,10 +30,12 @@ string nombre;
 public:
     mount(string parametros[]);
     void ejecutar();
-    void verificarDiscoyParticion();
     void montarParticion();
     void mostrarMount();
-    void validarExisteRegistro();
+    bool verificarExistenciaDiscoyParticion();
+    bool verificarDiscoMontado();
+    bool verificarParticion();
+    void montarDisco();
 };
 
 #endif // MOUNT_H

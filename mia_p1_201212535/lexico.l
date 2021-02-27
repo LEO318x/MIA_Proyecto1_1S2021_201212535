@@ -24,7 +24,7 @@
 negativo "-"[0-9]+
 entero [0-9]+
 letra [a-zA-Z]+
-identificador {letra}({letra}|{entero}|"_")*
+identificador ({letra}|{entero})({letra}|{entero}|"_")*
 eruta ([/]([^\n' '])*)
 cadena [\"][^\"\n]*[\"\n]
 
