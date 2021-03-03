@@ -16,5 +16,6 @@
     std::string obtenerFechaHora();
     int obtenerNumeroRandom();
     Partition obtenerParticionID(std::string id);
+    std::string obtenerRutaID(std::string id);
 //#include "funciones.cpp"
 #endif // FUNCIONES_H

@@ -24,6 +24,8 @@ public:
     void pesoEstructuras();
     void buscarTamanioParticion();
     int obtenerN(int tamanioParticion, int journal);
+    void formatear(superbloque sb);
+    void leerSuperBloque();
 };
 
 #endif // MKFS_H

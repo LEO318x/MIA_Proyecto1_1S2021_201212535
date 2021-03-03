@@ -236,7 +236,7 @@ void fdisk::crearParticion(){
                             fseek(archivo, 0, SEEK_SET);
                             fwrite(&mbr, sizeof(MBR), 1, archivo);
                             fclose(archivo);
-                            testEspacioDisco(mbr.mbr_partition[j].part_start, mbr.mbr_partition[j].part_size, this->path, '1');
+                            //testEspacioDisco(mbr.mbr_partition[j].part_start, mbr.mbr_partition[j].part_size, this->path, '1');
                             cout << "EXITO: La partición se ha creado!" << endl;
                             break;
                         }

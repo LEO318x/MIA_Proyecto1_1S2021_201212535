@@ -58,10 +58,10 @@ std::string toUpper(std::string cadena){
 std::string obtenerFechaHora(){
     time_t rawtime;
     struct tm * timeinfo;
-    char fechaHora [18];
+    char fechaHora [16];
     time (&rawtime);
     timeinfo = localtime (&rawtime);
-    strftime(fechaHora,18,"%d/%m/%y %H:%M:%S",timeinfo);
+    strftime(fechaHora,16,"%d/%m/%y %H:%M",timeinfo);
 
     return fechaHora;
 }
@@ -105,6 +105,19 @@ extern vector<Disco> registro;
         }
     }
     return particion;
+}
+
+std::string obtenerRutaID(std::string id){
+std::string ruta;
+extern vector<Disco> registro;
+    for(int i=0; i < registro.size(); i++){
+        for(int j=0; j < registro[i].particiones.size(); j++){
+            if(registro[i].particiones[j].id == id){
+                ruta = registro[i].ruta;
+            }
+        }
+    }
+    return ruta;
 }
 
 

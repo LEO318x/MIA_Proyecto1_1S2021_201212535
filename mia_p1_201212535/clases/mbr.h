@@ -17,7 +17,7 @@ typedef struct
 typedef struct
 {
     int mbr_tamano;
-    char mbr_fecha_creacion[18];
+    char mbr_fecha_creacion[16];
     int  mbr_disk_signature;
     char disk_fit;
     Partition mbr_partition[4];    

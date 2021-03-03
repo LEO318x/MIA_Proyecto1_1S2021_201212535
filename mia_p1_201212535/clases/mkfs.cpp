@@ -45,25 +45,27 @@ void mkfs::ejecutar(){
             sb.s_bm_block_start = sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal));
             sb.s_inode_start = sizeof(superbloque)+4*obtenerN(part.part_size, sizeof(journal));
             sb.s_block_start = sizeof(superbloque)+(obtenerN(part.part_size, 0)*sizeof(inodo))+4*obtenerN(part.part_size, sizeof(journal));
-            cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
+            /*cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
             cout << "\nTotal de bloques: " << sb.s_blocks_count << endl;
             cout << "\nBloques Libres: " << sb.s_blocks_count << endl;
             cout << "\nInodos Libres: " << sb.s_free_inodes_count << endl;
             cout << "\nInicio Bitmap Inodos: " << sb.s_bm_inode_start << endl;
             cout << "\nInicio Bitmap Bloques: " << sb.s_bm_block_start << endl;
             cout << "\nInicio Inodo: " << sb.s_inode_start << endl;
-            cout << "\nInicio Bloque: " << sb.s_block_start << endl;
+            cout << "\nInicio Bloque: " << sb.s_block_start << endl;*/
 
         }
         strcpy(sb.s_mtime, obtenerFechaHora().c_str());
         sb.s_mnt_count = 1;
         sb.s_inode_size = sizeof(inodo);
-        cout << "\nTamaño Inodo: " << sb.s_inode_size << endl;
+        //cout << "\nTamaño Inodo: " << sb.s_inode_size << endl;
         sb.s_block_size = 64;
         sb.s_first_ino = 0;
-        sb.s_first_blo = 0;   
+        sb.s_first_blo = 0;
+        formatear(sb); 
+        leerSuperBloque();  
     }  
-    pesoEstructuras();
+    //pesoEstructuras();
 }
 
 bool mkfs::validarParametros(){
@@ -126,3 +128,44 @@ int mkfs::obtenerN(int tamanioParticion, int journal){
     n = floor((tamanioParticion - sizeof(superbloque))/(4+journal+sizeof(inodo)+(3*64))); 
     return n;
 }
+
+void mkfs::formatear(superbloque sb){
+    Partition part = obtenerParticionID(this->id);
+    FILE *disco;
+    //superbloque sb;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(this->id)).c_str(), "rb+");
+    char buffer = '\0';
+    if(disco != NULL){
+        fseek(disco,part.part_start,SEEK_SET);
+        if(this->type == "full"){
+            for(int i=0; i < part.part_size; i++){
+                fwrite(&buffer, sizeof(buffer), 1, disco);
+            }
+        }
+        fseek(disco,part.part_start,SEEK_SET);  
+        fwrite(&sb, sizeof(superbloque), 1, disco);        
+        fclose(disco);
+    }
+}
+
+void mkfs::leerSuperBloque(){
+    Partition part = obtenerParticionID(this->id);
+    superbloque sb;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(this->id)).c_str(), "rb+");
+    if(disco != NULL){
+       fseek(disco,part.part_start,SEEK_SET); 
+       fread(&sb, sizeof(superbloque), 1, disco);
+       fclose; 
+    }
+    cout << "--------------LECTURA SUPERBLOQUE-------------" << endl;
+    cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
+    cout << "\nTotal de bloques: " << sb.s_blocks_count << endl;
+    cout << "\nBloques Libres: " << sb.s_blocks_count << endl;
+    cout << "\nInodos Libres: " << sb.s_free_inodes_count << endl;
+    cout << "\nInicio Bitmap Inodos: " << sb.s_bm_inode_start << endl;
+    cout << "\nInicio Bitmap Bloques: " << sb.s_bm_block_start << endl;
+    cout << "\nInicio Inodo: " << sb.s_inode_start << endl;
+    cout << "\nInicio Bloque: " << sb.s_block_start << endl;
+}
+
