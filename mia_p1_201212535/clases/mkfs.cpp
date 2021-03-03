@@ -22,10 +22,11 @@ void mkfs::ejecutar(){
             sb.s_blocks_count = 3*obtenerN(part.part_size, 0);
             sb.s_free_blocks_count = 3*obtenerN(part.part_size, 0);
             sb.s_free_inodes_count = obtenerN(part.part_size, 0);
-            sb.s_bm_inode_start = sizeof(superbloque);
-            sb.s_bm_block_start = sizeof(superbloque)+obtenerN(part.part_size, 0);
-            sb.s_inode_start = sizeof(superbloque)+4*obtenerN(part.part_size, 0);
-            sb.s_block_start = sizeof(superbloque)+(obtenerN(part.part_size, 0)*sizeof(inodo))+4*obtenerN(part.part_size, 0);
+            sb.s_bm_inode_start = part.part_start+sizeof(superbloque);
+            sb.s_bm_block_start = part.part_start+sizeof(superbloque)+obtenerN(part.part_size, 0);
+            sb.s_inode_start = part.part_start+sizeof(superbloque)+4*obtenerN(part.part_size, 0);
+            sb.s_block_start = part.part_start+sizeof(superbloque)+(obtenerN(part.part_size, 0)*sizeof(inodo))+4*obtenerN(part.part_size, 0);
+            cout << "\nPart Start: " << part.part_start << endl;
             cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
             cout << "\nTotal de bloques: " << sb.s_blocks_count << endl;
             cout << "\nBloques Libres: " << sb.s_blocks_count << endl;
@@ -37,22 +38,22 @@ void mkfs::ejecutar(){
 
         }else if(this -> fs == "3fs"){
             cout << "---------------3FS---------------" << endl;
-            sb.s_inodes_count = obtenerN(part.part_size, 0);
-            sb.s_blocks_count = 3*obtenerN(part.part_size, 0);
-            sb.s_free_blocks_count = 3*obtenerN(part.part_size, 0);
-            sb.s_free_inodes_count = obtenerN(part.part_size, 0);
-            sb.s_bm_inode_start = sizeof(superbloque) + sizeof(journal);
-            sb.s_bm_block_start = sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal));
-            sb.s_inode_start = sizeof(superbloque)+4*obtenerN(part.part_size, sizeof(journal));
-            sb.s_block_start = sizeof(superbloque)+(obtenerN(part.part_size, 0)*sizeof(inodo))+4*obtenerN(part.part_size, sizeof(journal));
-            /*cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
+            sb.s_inodes_count = obtenerN(part.part_size, sizeof(journal));
+            sb.s_blocks_count = 3*obtenerN(part.part_size, sizeof(journal));
+            sb.s_free_blocks_count = 3*obtenerN(part.part_size, sizeof(journal));
+            sb.s_free_inodes_count = obtenerN(part.part_size, sizeof(journal));
+            sb.s_bm_inode_start = part.part_start+sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal))*sizeof(journal);
+            sb.s_bm_block_start = part.part_start+sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal))*sizeof(journal)+obtenerN(part.part_size, sizeof(journal));
+            sb.s_inode_start = part.part_start+sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal))*sizeof(journal)+obtenerN(part.part_size, sizeof(journal))+3*obtenerN(part.part_size, sizeof(journal));
+            sb.s_block_start = part.part_start+sizeof(superbloque)+obtenerN(part.part_size, sizeof(journal))*sizeof(journal)+obtenerN(part.part_size, sizeof(journal))+3*obtenerN(part.part_size, sizeof(journal))+obtenerN(part.part_size, sizeof(journal))*sizeof(inodo);
+            cout << "\nTotal de inodos: " << sb.s_inodes_count << endl;
             cout << "\nTotal de bloques: " << sb.s_blocks_count << endl;
             cout << "\nBloques Libres: " << sb.s_blocks_count << endl;
             cout << "\nInodos Libres: " << sb.s_free_inodes_count << endl;
             cout << "\nInicio Bitmap Inodos: " << sb.s_bm_inode_start << endl;
             cout << "\nInicio Bitmap Bloques: " << sb.s_bm_block_start << endl;
             cout << "\nInicio Inodo: " << sb.s_inode_start << endl;
-            cout << "\nInicio Bloque: " << sb.s_block_start << endl;*/
+            cout << "\nInicio Bloque: " << sb.s_block_start << endl;
 
         }
         strcpy(sb.s_mtime, obtenerFechaHora().c_str());
