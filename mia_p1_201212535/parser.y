@@ -10,6 +10,7 @@
 #include "clases/exec.h"
 #include "clases/mount.h"
 #include "clases/unmount.h"
+#include "clases/mkfs.h"
 
 
 using namespace std;
@@ -21,6 +22,7 @@ std::string p_fdisk[9]; // 0 = size, 1 = u, 2 = path, 3 = type, 4 = f, 5 = delet
 std::string p_exec[1]; // 0 = ruta
 std::string p_mount[2]; // 0 = path, 1 = name
 std::string p_unmount[1]; // 0 = id
+std::string p_mkfs[3]; // 0 = id, 1=type, 2=fs
 bool pPrimero = true;
 int yyerror(const char* mens)
 {
@@ -125,6 +127,7 @@ COMANDOS: MKDISK {}
         | EXEC {}
         | MOUNT {}
         | UNMOUNT {}
+        | MKFS {}
         | COMENTARIO {}
 ;
 
@@ -199,3 +202,16 @@ UNMOUNT: tk_unmount P_UNMOUNT {unmount unmount(p_unmount); unmount.ejecutar(); p
 
 P_UNMOUNT: tk_menos tk_id tk_igual tk_identificador {p_unmount[0] = $4;}
 ;
+
+MKFS: tk_mkfs LP_MKFS {mkfs mkfs(p_mkfs); mkfs.ejecutar(); for(int i=0; i < 3; i++){p_mkfs[i].clear();}}
+;
+
+LP_MKFS: P_MKFS LP_MKFS
+        | P_MKFS
+;
+
+P_MKFS: tk_menos tk_id tk_igual tk_identificador {p_mkfs[0] = $4;}
+        | tk_menos tk_type tk_igual tk_identificador {p_mkfs[1] = $4;}
+        | tk_menos tk_fs tk_igual tk_identificador {p_mkfs[2] = $4;}
+;
+

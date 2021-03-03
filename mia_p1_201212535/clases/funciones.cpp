@@ -74,4 +74,39 @@ int obtenerNumeroRandom(){
     return numero;
 }
 
+Partition obtenerParticionID(string id){
+Partition particion;
+extern vector<Disco> registro;
+    for(int i=0; i < registro.size(); i++){
+        for(int j=0; j < registro[i].particiones.size(); j++){
+            if(registro[i].particiones[j].id == id){
+                //cout << "EXITO: Particion encontrada con el id " << id << endl;
+                //cout << "RUTA: " << registro[i].ruta << endl;
+                FILE *arch;
+                MBR mbr;
+                arch = fopen(quitarComillasRuta(registro[i].ruta).c_str(), "rb");
+                if(arch != NULL){
+                    fseek(arch,0,SEEK_SET);
+                    fread(&mbr, sizeof(MBR), 1, arch);
+                }
+                for(int k = 0; k < 4; k++){
+                    if(quitarComillasTexto(toLower(mbr.mbr_partition[k].part_name)) == quitarComillasTexto(toLower(registro[i].particiones[j].nombre))){
+                        //cout << "|--> Partición encontrada :DDDDDDD" << endl;
+                        particion = mbr.mbr_partition[k];
+                        break;
+                    }
+                    if(i == 3){
+                        cout << "ERROR_FUNC#001: La particion no existe! :(" << endl;
+                    }             
+                }
+                fclose;
+                break;
+            }
+        }
+    }
+    return particion;
+}
+
+
+
 

@@ -17,6 +17,7 @@ SOURCES += \
     clases/funciones.cpp \
     clases/mbr.cpp \
     clases/mkdisk.cpp \
+    clases/mkfs.cpp \
     clases/mount.cpp \
     clases/rmdisk.cpp \
     clases/unmount.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
 	clases/funciones.h \
 	clases/mbr.h \
 	clases/mkdisk.h \
+	clases/mkfs.h \
 	clases/mount.h \
 	clases/rmdisk.h \
 	clases/unmount.h \

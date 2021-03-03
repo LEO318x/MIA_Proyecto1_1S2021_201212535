@@ -28,16 +28,22 @@ void unmount::mostrar(){
 void unmount::desmontar(){
 extern vector<Disco> registro;
     bool verificacion = false;
+
     for(int i=0; i < registro.size(); i++){
-        for(int j = 0; j < registro[i].particiones.size(); j++){
-            if(toLower(registro[i].particiones[j].id) == toLower(quitarComillasTexto(this->id))){
-                registro[i].particiones.erase(registro[i].particiones.begin()+j);
-                cout << "EXITO: Particion Desmontada" << endl;
-                break;
+            if(registro[i].particiones.size() != 0){
+            for(int j = 0; j < registro[i].particiones.size(); j++){
+                if(toLower(registro[i].particiones[j].id) == toLower(quitarComillasTexto(this->id))){
+                    registro[i].particiones.erase(registro[i].particiones.begin()+j);
+                    cout << "EXITO: Particion Desmontada" << endl;
+                    break;
+                }
+                if(j == registro[i].particiones.size()-1){
+                    cout << "ERROR: No existe el id" << endl;
+                }
             }
-            if(j == registro[i].particiones.size()-1){
-                cout << "ERROR: No existe el id" << endl;
-            }
+        }else{
+            cout << "ERROR: No existe el id" << endl;
         }
     }
+    
 }

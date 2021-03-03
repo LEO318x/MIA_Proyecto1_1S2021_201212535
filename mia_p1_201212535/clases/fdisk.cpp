@@ -141,33 +141,6 @@ void fdisk::crearParticion(){
     MBR mbr;
     fread(&mbr, sizeof(MBR), 1, archivo);
 
-
-
-    /*
-    *
-    * 
-    * Prueba
-    * 
-    */
-
-    /*mbr.mbr_partition[0].part_status = '1';
-    mbr.mbr_partition[0].part_type = 'T';
-    mbr.mbr_partition[0].part_fit = 'X';
-    mbr.mbr_partition[0].part_start = 5048;
-    mbr.mbr_partition[0].part_size = 0;
-
-    mbr.mbr_partition[2].part_status = '1';
-    mbr.mbr_partition[2].part_type = 'T';
-    mbr.mbr_partition[2].part_fit = 'X';
-    mbr.mbr_partition[2].part_start = 2024;
-    mbr.mbr_partition[2].part_size = 0;
-
-    mbr.mbr_partition[3].part_status = '1';
-    mbr.mbr_partition[3].part_type = 'T';
-    mbr.mbr_partition[3].part_fit = 'X';
-    mbr.mbr_partition[3].part_start = 6000;
-    mbr.mbr_partition[3].part_size = 0;*/
-
     vector<Partition> particionActiva;
     vector<Partition> particionAux;
     for (int i = 0; i < 4; i++){
@@ -217,13 +190,6 @@ void fdisk::crearParticion(){
         }
 
 
-    /*for(int i = 0; i < vES.size(); i++){
-        cout << "start////// " << vES[i].inicio << endl;  
-        cout << "size////// " << vES[i].tamanio << endl;
-    }*/
-    //cout << "inicioVacio////// " << inicioVacio << endl;  
-
-
     for(int i = 0; i < 4; i++){
         //Verificamos si ya existe el nombre
         if(toLower(mbr.mbr_partition[i].part_name) == toLower(this->name)){
@@ -247,11 +213,6 @@ void fdisk::crearParticion(){
     if (!verificacion){
         return;
     }   
-
-        /*for(int i = 0; i < part.size(); i++){
-        cout << "-----#>" << to_string(auxPart[i].part_start) << endl;
-    }*/
-    
 
 
     //Ajuste

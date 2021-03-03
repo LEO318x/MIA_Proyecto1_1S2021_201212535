@@ -16,7 +16,7 @@ extern int linea; // Linea del token
 extern int columna; // Columna de los tokens
 extern int yylineno;
 vector <Disco> registro;
-int auxDiscoID = 0;
+int auxDiscoID = 1;
 
 int main(int argc, char *argv[])
 {
