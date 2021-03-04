@@ -99,7 +99,7 @@ extern vector<Disco> registro;
                         cout << "ERROR_FUNC#001: La particion no existe! :(" << endl;
                     }             
                 }
-                fclose;
+                fclose(arch);
                 break;
             }
         }

@@ -46,7 +46,7 @@ typedef struct bloqueCarpeta
     carpeta b_content[4];
 };
 
-typedef struct archivo
+typedef struct bloqueArchivo
 {
     char b_content[64];
 };
@@ -64,6 +64,11 @@ typedef struct journal{
     char j_fecha[16];
     char j_propietario[10];
     int j_permisos;
+};
+
+typedef struct bm_espacio{
+    int inicio;
+    int tamanio;
 };
 
 

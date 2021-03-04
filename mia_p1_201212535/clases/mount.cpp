@@ -62,7 +62,7 @@ bool mount::verificarExistenciaDiscoyParticion(){
                 cout << "ERROR_MOUNT#002: La particion no existe! :(" << endl;
              }             
          }
-         fclose;
+         fclose(arch);
     }else{
         cout << "ERROR_MOUNT#001: El disco no existe! :(" << endl;
     }

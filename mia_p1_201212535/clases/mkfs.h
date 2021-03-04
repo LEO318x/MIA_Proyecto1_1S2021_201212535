@@ -26,6 +26,12 @@ public:
     int obtenerN(int tamanioParticion, int journal);
     void formatear(superbloque sb);
     void leerSuperBloque();
+    string leerBitmapInodos();
+    string leerBitmapBloques();
+    void obtenerEspacioInodos();
+    void quemarRoot();
 };
+
+
 
 #endif // MKFS_H
