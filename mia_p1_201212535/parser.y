@@ -11,6 +11,7 @@
 #include "clases/mount.h"
 #include "clases/unmount.h"
 #include "clases/mkfs.h"
+#include "clases/login.h"
 
 
 using namespace std;
@@ -23,6 +24,8 @@ std::string p_exec[1]; // 0 = ruta
 std::string p_mount[2]; // 0 = path, 1 = name
 std::string p_unmount[1]; // 0 = id
 std::string p_mkfs[3]; // 0 = id, 1=type, 2=fs
+std::string p_login[3]; //0=usuario, 1=password, 2=id
+
 bool pPrimero = true;
 int yyerror(const char* mens)
 {
@@ -85,6 +88,8 @@ char TEXT[256];
 %token<TEXT> tk_cont;
 %token<TEXT> tk_p;
 %token<TEXT> tk_dest;
+%token<TEXT> tk_usuario;
+%token<TEXT> tk_password;
 %token<TEXT> tk_f;
 %token<TEXT> tk_u;
 %token<TEXT> tk_delete;
@@ -128,6 +133,7 @@ COMANDOS: MKDISK {}
         | MOUNT {}
         | UNMOUNT {}
         | MKFS {}
+        | LOGIN {}
         | COMENTARIO {}
 ;
 
@@ -213,5 +219,22 @@ LP_MKFS: P_MKFS LP_MKFS
 P_MKFS: tk_menos tk_id tk_igual tk_identificador {p_mkfs[0] = $4;}
         | tk_menos tk_type tk_igual tk_identificador {p_mkfs[1] = $4;}
         | tk_menos tk_fs tk_igual tk_identificador {p_mkfs[2] = $4;}
+;
+
+LOGIN: tk_login LP_LOGIN {login login(p_login); login.ejecutar(); for(int i=0; i < 3; i++){p_login[i].clear();}}
+;
+
+LP_LOGIN: P_LOGIN LP_LOGIN 
+        | P_LOGIN
+;
+
+P_LOGIN: tk_menos tk_usuario tk_igual tk_identificador {p_login[0] = $4;}
+        | tk_menos tk_usuario tk_igual tk_cadena {p_login[0] = $4;}
+
+        |tk_menos tk_password tk_igual tk_identificador {p_login[1] = $4;}
+        |tk_menos tk_password tk_igual tk_cadena {p_login[1] = $4;}
+        |tk_menos tk_password tk_igual tk_entero {p_login[1] = $4;}
+
+        |tk_menos tk_id tk_igual tk_identificador {p_login[2] = $4;}
 ;
 

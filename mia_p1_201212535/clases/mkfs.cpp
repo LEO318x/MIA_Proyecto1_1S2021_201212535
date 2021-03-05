@@ -59,21 +59,36 @@ void mkfs::ejecutar(){
         strcpy(sb.s_mtime, obtenerFechaHora().c_str());
         sb.s_mnt_count = 1;
         sb.s_inode_size = sizeof(inodo);
-        //cout << "\nTamaño Inodo: " << sb.s_inode_size << endl;
         sb.s_block_size = 64;
         sb.s_first_ino = 0;
         sb.s_first_blo = 0;
         formatear(sb); 
-        leerSuperBloque();
-        /*string xd = leerBitmapInodos();
-        cout << "Bitmap Inodos: " << xd.size() << endl;
-        cout << xd << endl;
-        string xd2 = leerBitmapBloques();
-        cout << "Bitmap Bloques: " <<  xd2.size() << endl;
-        cout << xd2 << endl;*/
+        //leerSuperBloque();
         quemarRoot();
-        leerSuperBloque();
-        //obtenerEspacioInodos();
+        //leerSuperBloque();
+
+
+        //obtenerEspacioBitmapInodos();
+        //obtenerEspacioBitmapBloques();
+        /*
+        cout << "----------------------" << endl;
+        testInodo(sb);
+        cout << "----------------------" << endl;
+        //------------------
+        for(int i = 0; i < 5; i++){
+            string test = "prueba" + to_string(i);
+            journal jlr;
+            strcpy(jlr.j_tipo_operacion, test.c_str());
+            jlr.j_tipo= '0';
+            strcpy(jlr.j_nombre, "/");
+            strcpy(jlr.j_contenido, "");
+            strcpy(jlr.j_fecha, obtenerFechaHora().c_str());
+            jlr.j_userid = 1;
+            jlr.j_groupid = 1;
+            jlr.j_permisos = 664;
+            escribirJournal(jlr, this->id);
+        }
+        testJournal(part.part_start, 8);*/
     }  
     //pesoEstructuras();
 }
@@ -102,9 +117,6 @@ bool mkfs::validarParametros(){
     return validacion;
 }
 
-/*Partition part = obtenerParticionID(this->id);
-cout << "Empieza: " << to_string(part.part_start) << endl;
-cout << "Tamanio: " << to_string(part.part_size) << endl;*/
 
 bool mkfs::buscarID(){
     bool verificacion = false;
@@ -144,16 +156,72 @@ void mkfs::formatear(superbloque sb){
     FILE *disco;
     //superbloque sb;
     disco = fopen(quitarComillasRuta(obtenerRutaID(this->id)).c_str(), "rb+");
+    char bufferF = '\0';
     char buffer = '0';
     if(disco != NULL){
         fseek(disco,part.part_start,SEEK_SET);
         if(this->type == "full"){
             for(int i=0; i < part.part_size; i++){
+                fwrite(&bufferF, sizeof(bufferF), 1, disco);                
+            }
+
+            fseek(disco, sb.s_bm_block_start, SEEK_SET);
+            for(int j = 0; j < sb.s_blocks_count; j++){
+                fwrite(&buffer, sizeof(buffer), 1, disco);
+            }
+            fseek(disco, sb.s_bm_inode_start, SEEK_SET);
+            for(int j = 0; j < sb.s_inodes_count; j++){
+                fwrite(&buffer, sizeof(buffer), 1, disco);
+            }
+        }else if(this->type == "fast"){
+            fseek(disco, sb.s_bm_block_start, SEEK_SET);
+            for(int i = 0; i < sb.s_blocks_count; i++){
+                fwrite(&buffer, sizeof(buffer), 1, disco);
+            }
+            fseek(disco, sb.s_bm_inode_start, SEEK_SET);
+            for(int i = 0; i < sb.s_inodes_count; i++){
                 fwrite(&buffer, sizeof(buffer), 1, disco);
             }
         }
         fseek(disco,part.part_start,SEEK_SET);  
-        fwrite(&sb, sizeof(superbloque), 1, disco);        
+        fwrite(&sb, sizeof(superbloque), 1, disco);
+
+        /*
+        * JOURNALING
+        */
+
+       if(this->fs == "3fs"){
+       //int iniJournal = part.part_start + sizeof(superbloque);
+       //fseek(disco, iniJournal, SEEK_SET);
+       //Carpeta Raiz
+       journal jl;
+       jl.j_permisos = 3;
+       fwrite(&jl, sizeof(journal), 1, disco);
+
+       journal jlr;
+       strcpy(jlr.j_tipo_operacion, "mkfs");
+       jlr.j_tipo= '0';
+       strcpy(jlr.j_nombre, "/");
+       strcpy(jlr.j_contenido, "");
+       strcpy(jlr.j_fecha, obtenerFechaHora().c_str());
+       jlr.j_userid = 1;
+       jlr.j_groupid = 1;
+       jlr.j_permisos = 664;
+       fwrite(&jlr, sizeof(journal), 1, disco);
+       
+       //Archivo Usuarios
+        journal jla;
+        strcpy(jla.j_tipo_operacion, "mkfs");
+        jla.j_tipo= '1';
+        strcpy(jla.j_nombre, "/users.txt");
+        strcpy(jla.j_contenido, "1,G,root\n1,U,root,root,123\n");
+        strcpy(jla.j_fecha, obtenerFechaHora().c_str());
+        jla.j_userid = 1;
+        jla.j_groupid = 1;
+        jla.j_permisos = 664;
+       fwrite(&jla, sizeof(journal), 1, disco);
+       }
+
         fclose(disco);
     }
 }
@@ -190,10 +258,10 @@ string mkfs::leerBitmapInodos(){
     fread(&sb, sizeof(superbloque), 1, disco);
     char bitmapInodos[sb.s_inodes_count];
     if(disco != NULL){
-        fseek(disco,sb.s_bm_inode_start,SEEK_SET);
+        /*fseek(disco,sb.s_bm_inode_start,SEEK_SET);
         fwrite(&buffer,sizeof(buffer),1,disco);
         fseek(disco,sb.s_bm_block_start-1,SEEK_SET);
-        fwrite(&buffer,sizeof(buffer),1,disco);
+        fwrite(&buffer,sizeof(buffer),1,disco);*/
 
         fseek(disco,sb.s_bm_inode_start,SEEK_SET);
         fread(&bitmapInodos, sb.s_inodes_count, 1, disco);        
@@ -217,10 +285,10 @@ string mkfs::leerBitmapBloques(){
     fread(&sb, sizeof(superbloque), 1, disco);
     char bitmapBloques[sb.s_blocks_count];
     if(disco != NULL){
-        fseek(disco,sb.s_bm_block_start,SEEK_SET);
+        /*fseek(disco,sb.s_bm_block_start,SEEK_SET);
         fwrite(&buffer,sizeof(buffer),1,disco);
-        //fseek(disco,sb.s_bm_block_start-1,SEEK_SET);
-        //fwrite(&buffer,sizeof(buffer),1,disco);
+        fseek(disco,sb.s_bm_block_start-1,SEEK_SET);
+        fwrite(&buffer,sizeof(buffer),1,disco);*/
         fseek(disco,sb.s_bm_block_start,SEEK_SET);
         fread(&bitmapBloques, sb.s_blocks_count, 1, disco);        
         for(int i=0; i < sb.s_blocks_count; i++){
@@ -232,24 +300,67 @@ string mkfs::leerBitmapBloques(){
     return stringBloques;     
 }
 
-void mkfs::obtenerEspacioInodos(){
+void mkfs::obtenerEspacioBitmapInodos(){
     //string test = "1000010000001011111111101111111111111";
-    //string test = "0101100100";
-    string test = "0110000100";
+    string test = "0101100100";
+    //string test = "0110000100";
     int tam = 0;
-    int inicio = 1;
-    int fin = 0;
+    int inicio = 0;
+    int pos = 0;
 
+    cout << "------ Espacio Bitmap de Inodos ------"<< endl;
     for(int i=0; i < test.length(); i++){
+        if(test[i] == '1'){  
+            pos = i;
+            if(tam != 0){
+                cout << "Ini: " << pos-tam << "Tam: " << tam << endl;
+            }          
+            tam = 0;            
+        }
         if(test[i] == '0'){
-            tam++;
-            inicio++;        
+            inicio = i;
+            tam++;        
         }
-        if(test[i] == '1'){            
-            cout << "Pos: " << i-tam << "Tam: " << tam << endl;
+        if(i == test.length() - 1){            
+            pos = i;
+            if(tam != 0){
+                cout << "Ini: " << pos-tam+1 << "Tam: " << tam << endl;
+            }          
             tam = 0;
-            inicio++;
         }
+        
+    }
+}
+
+void mkfs::obtenerEspacioBitmapBloques(){
+    string test = "10000100000010111111111011111111111110";
+    //string test = "0101100100";
+    //string test = "0110000100";
+    int tam = 0;
+    int inicio = 0;
+    int pos = 0;
+
+    cout << "------ Espacio Bitmap de Bloques ------"<< endl;
+    for(int i=0; i < test.length(); i++){
+        if(test[i] == '1'){  
+            pos = i;
+            if(tam != 0){
+                cout << "Ini: " << pos-tam << "Tam: " << tam << endl;
+            }          
+            tam = 0;            
+        }
+        if(test[i] == '0'){
+            inicio = i;
+            tam++;        
+        }
+        if(i == test.length() - 1){            
+            pos = i;
+            if(tam != 0){
+                cout << "Ini: " << pos-tam+1 << "Tam: " << tam << endl;
+            }          
+            tam = 0;
+        }
+        
     }
 }
 
@@ -329,7 +440,7 @@ void mkfs::quemarRoot(){
     iArchivo.i_perm = 664; 
 
     bloqueArchivo bArchivo;
-    strcpy(bArchivo.b_content, "root,root\n");
+    strcpy(bArchivo.b_content, "1,G,root\n1,U,root,root,123\n");
 
     fseek(disco, sb.s_inode_start, SEEK_SET);
     fwrite(&iCarpeta, sizeof(inodo), 1, disco);
@@ -342,5 +453,42 @@ void mkfs::quemarRoot(){
 
 }
 
+void mkfs::testInodo(superbloque sb){    
+    cout << "Pos Inodo: ---> " << obtenerPosicionInodo(sb.s_inode_start, 0) << endl;
+}
 
+void mkfs::testJournal(int part_start, int indice){
+    int inicioJournal = part_start + sizeof(superbloque);    
+
+    FILE *disco;
+    char buffer = '1';
+    journal jl;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(this->id)).c_str(), "rb+");
+    if(disco != NULL){
+        fseek(disco, inicioJournal, SEEK_SET);
+        fread(&jl, sizeof(journal), 1, disco);
+    
+    cout << "---- REGISTRO JOURNAL ---- " << jl.j_permisos << endl;
+        if(indice > 0){
+            for(int i = 1; i < indice; i++){
+                int journalIndice = part_start + sizeof(superbloque) + (i * sizeof(journal));
+                journal auxj;
+                fseek(disco, journalIndice, SEEK_SET);
+                fread(&auxj, sizeof(journal), 1, disco);
+                cout << "|----> Journal " << to_string(i) << " <----|" << endl;
+                cout << "Contenido: " << auxj.j_contenido << endl;
+                cout << "Fecha: " << auxj.j_fecha << endl;
+                cout << "Grupo: " << auxj.j_groupid << endl;
+                cout << "Usuario: " << auxj.j_userid << endl;
+                cout << "Nombre: " << auxj.j_nombre << endl;
+                cout << "Tipo: " << auxj.j_tipo << endl;
+                cout << "Tipo Operacion: " << auxj.j_tipo_operacion << endl;
+                cout << "Permisos: " << auxj.j_permisos << endl;                
+            }            
+        }
+    }
+    fclose(disco);
+
+
+}
 

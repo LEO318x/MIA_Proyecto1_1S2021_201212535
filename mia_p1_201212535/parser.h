@@ -96,25 +96,27 @@ extern int yydebug;
     tk_cont = 297,                 /* tk_cont  */
     tk_p = 298,                    /* tk_p  */
     tk_dest = 299,                 /* tk_dest  */
-    tk_f = 300,                    /* tk_f  */
-    tk_u = 301,                    /* tk_u  */
-    tk_delete = 302,               /* tk_delete  */
-    tk_add = 303,                  /* tk_add  */
-    tk_fs = 304,                   /* tk_fs  */
-    tk_r = 305,                    /* tk_r  */
-    tk_ruta = 306,                 /* tk_ruta  */
-    tk_entero = 307,               /* tk_entero  */
-    tk_negativo = 308,             /* tk_negativo  */
-    tk_cadena = 309,               /* tk_cadena  */
-    tk_eruta = 310,                /* tk_eruta  */
-    tk_identificador = 311,        /* tk_identificador  */
-    tk_punto = 312,                /* tk_punto  */
-    tk_menos = 313,                /* tk_menos  */
-    tk_guionbajo = 314,            /* tk_guionbajo  */
-    tk_asterisco = 315,            /* tk_asterisco  */
-    tk_interrogacion = 316,        /* tk_interrogacion  */
-    tk_igual = 317,                /* tk_igual  */
-    tk_comentario = 318            /* tk_comentario  */
+    tk_usuario = 300,              /* tk_usuario  */
+    tk_password = 301,             /* tk_password  */
+    tk_f = 302,                    /* tk_f  */
+    tk_u = 303,                    /* tk_u  */
+    tk_delete = 304,               /* tk_delete  */
+    tk_add = 305,                  /* tk_add  */
+    tk_fs = 306,                   /* tk_fs  */
+    tk_r = 307,                    /* tk_r  */
+    tk_ruta = 308,                 /* tk_ruta  */
+    tk_entero = 309,               /* tk_entero  */
+    tk_negativo = 310,             /* tk_negativo  */
+    tk_cadena = 311,               /* tk_cadena  */
+    tk_eruta = 312,                /* tk_eruta  */
+    tk_identificador = 313,        /* tk_identificador  */
+    tk_punto = 314,                /* tk_punto  */
+    tk_menos = 315,                /* tk_menos  */
+    tk_guionbajo = 316,            /* tk_guionbajo  */
+    tk_asterisco = 317,            /* tk_asterisco  */
+    tk_interrogacion = 318,        /* tk_interrogacion  */
+    tk_igual = 319,                /* tk_igual  */
+    tk_comentario = 320            /* tk_comentario  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -123,14 +125,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 38 "parser.y"
+#line 41 "parser.y"
 
 //se especifican los tipo de valores para los no terminales y lo terminales
 //char TEXT [256];
 //QString TEXT;
 char TEXT[256];
 
-#line 134 "parser.h"
+#line 136 "parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

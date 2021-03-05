@@ -6,6 +6,7 @@
 #include "mbr.h"
 #include <vector>
 #include "mount.h"
+#include "estructuras.h"
 
     std::string quitarComillasRuta(std::string ruta);
     std::string quitarComillasTexto(std::string ruta);
@@ -17,5 +18,8 @@
     int obtenerNumeroRandom();
     Partition obtenerParticionID(std::string id);
     std::string obtenerRutaID(std::string id);
+    int obtenerPosicionInodo(int inicioInodo, int indiceInodo);
+    void escribirJournal(journal jlEscribir, std::string idPart);
+    std::vector<std::string> split(std::string cadena, std::string limitador);
 //#include "funciones.cpp"
 #endif // FUNCIONES_H

@@ -120,6 +120,53 @@ extern vector<Disco> registro;
     return ruta;
 }
 
+ int obtenerPosicionInodo(int inicioInodo, int indiceInodo){
+        int pos = inicioInodo + (indiceInodo*sizeof(inodo));
+        return pos;
+    }
 
+void escribirJournal(journal jlEscribir, std::string idPart){
+    Partition part = obtenerParticionID(idPart);
+    FILE *disco;
+    journal jl;    
+    disco = fopen(quitarComillasRuta(obtenerRutaID(idPart)).c_str(), "rb+");
+    if(disco != NULL){
+        int inicioJournal = part.part_start + sizeof(superbloque);
+        fseek(disco, inicioJournal, SEEK_SET);
+        fread(&jl, sizeof(journal), 1, disco);
+        int journalIndice = part.part_start + sizeof(superbloque) + (jl.j_permisos * sizeof(journal));
+        jl.j_permisos = jl.j_permisos + 1;
+        fseek(disco, inicioJournal, SEEK_SET);
+        fwrite(&jl, sizeof(journal), 1, disco);
+        fseek(disco, journalIndice, SEEK_SET);
+        fwrite(&jlEscribir, sizeof(journal), 1, disco);
+        }    
+    fclose(disco);    
+}
+
+void obtenerDatosUsuario(std::string id){
+    Partition part = obtenerParticionID(id);
+    FILE *disco;
+    superbloque sb;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
+    if(disco != NULL){
+        fseek(disco,part.part_start,SEEK_SET); 
+        fread(&sb, sizeof(superbloque), 1, disco);        
+    }
+    fclose(disco);
+}
+
+std::vector<std::string> split(std::string cadena, std::string limitador){
+    std::vector<std::string> v;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = cadena.find(limitador)) != std::string::npos) {
+        token = cadena.substr(0, pos);
+        v.push_back(token);
+        cadena.erase(0, pos + limitador.length());
+    }
+    v.push_back(cadena);
+    return v;
+}
 
 

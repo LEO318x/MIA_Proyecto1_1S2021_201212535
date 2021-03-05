@@ -62,7 +62,8 @@ typedef struct journal{
     char j_nombre[200];
     char j_contenido[200];
     char j_fecha[16];
-    char j_propietario[10];
+    int j_userid;
+    int j_groupid;
     int j_permisos;
 };
 

@@ -6,7 +6,6 @@
 #include "funciones.h"
 #include <vector>
 #include "mount.h"
-#include "estructuras.h"
 #include "math.h"
 
 using namespace std;
@@ -28,8 +27,11 @@ public:
     void leerSuperBloque();
     string leerBitmapInodos();
     string leerBitmapBloques();
-    void obtenerEspacioInodos();
+    void obtenerEspacioBitmapInodos();
+    void obtenerEspacioBitmapBloques();
     void quemarRoot();
+    void testInodo(superbloque sb);
+    void testJournal(int part_start, int indice);
 };
 
 
