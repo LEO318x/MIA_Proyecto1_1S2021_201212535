@@ -16,6 +16,10 @@ public:
     login(string parametros[]);
     void ejecutar();
     bool validarParametros();
+    void test();
+    void testArchivo();
+    bool iniciarSesion();
+    void testLogin();
 };
 
 #endif // LOGIN_H

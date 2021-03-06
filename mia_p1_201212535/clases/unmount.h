@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include "funciones.h"
-#include "mount.h"
 
 using namespace std;
 

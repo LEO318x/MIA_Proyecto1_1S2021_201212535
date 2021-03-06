@@ -12,6 +12,7 @@
 #include "clases/unmount.h"
 #include "clases/mkfs.h"
 #include "clases/login.h"
+#include "clases/logout.h"
 
 
 using namespace std;
@@ -134,6 +135,7 @@ COMANDOS: MKDISK {}
         | UNMOUNT {}
         | MKFS {}
         | LOGIN {}
+        | LOGOUT {}
         | COMENTARIO {}
 ;
 
@@ -238,3 +240,5 @@ P_LOGIN: tk_menos tk_usuario tk_igual tk_identificador {p_login[0] = $4;}
         |tk_menos tk_id tk_igual tk_identificador {p_login[2] = $4;}
 ;
 
+LOGOUT: tk_logout {logout logout; logout.ejecutar();}
+;

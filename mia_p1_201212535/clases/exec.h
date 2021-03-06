@@ -10,8 +10,6 @@
 #include <QString>
 #include "funciones.h"
 
-
-
 using namespace std;
 
 

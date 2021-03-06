@@ -5,21 +5,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <bits/stdc++.h> 
-#include "mbr.h"
 #include "funciones.h"
 
 using namespace std;
-
-typedef struct {
-        string id;
-        string nombre;
-}Particion;
-
-typedef struct {
-        int id;
-        string ruta;
-        vector<Particion> particiones;
-}Disco;
 
 class mount
 {

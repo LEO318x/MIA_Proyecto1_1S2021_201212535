@@ -1,4 +1,48 @@
+#include <vector>
+#include <string>
+using namespace std;
 
+/*
+* MBR
+*/
+
+typedef struct
+{
+    char part_status;
+    char part_type;
+    char part_fit;
+    int  part_start;
+    int  part_size;
+    char part_name[16];
+}Partition;
+
+typedef struct
+{
+    int mbr_tamano;
+    char mbr_fecha_creacion[16];
+    int  mbr_disk_signature;
+    char disk_fit;
+    Partition mbr_partition[4];    
+}MBR;
+
+/*
+* MOUNT
+*/
+
+typedef struct {
+        string id;
+        string nombre;
+}Particion;
+
+typedef struct {
+        int id;
+        string ruta;
+        vector<Particion> particiones;
+}Disco;
+
+/*
+* SISTEMA DE ARCHIVOS
+*/
 
 typedef struct superbloque
 {
@@ -72,5 +116,13 @@ typedef struct bm_espacio{
     int tamanio;
 };
 
-
-
+/*
+* LOGIN
+*/
+typedef struct infoLogin{
+    string gid = "";
+    string tipo = "";
+    string grupo = "";
+    string user = "";
+    string pass = "";
+};

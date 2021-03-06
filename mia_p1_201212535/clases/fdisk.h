@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-#include "mbr.h"
 #include "funciones.h"
+
 using namespace std;
 class fdisk
 {

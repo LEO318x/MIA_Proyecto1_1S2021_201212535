@@ -7,6 +7,7 @@
 #include <chrono>
 #include <vector>
 #include "clases/mount.h"
+#include "clases/funciones.h"
 
 using namespace std;
 extern int yyparse(); //
@@ -17,6 +18,7 @@ extern int columna; // Columna de los tokens
 extern int yylineno;
 vector <Disco> registro;
 int auxDiscoID = 1;
+infoLogin loginfo;
 
 int main(int argc, char *argv[])
 {

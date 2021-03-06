@@ -16,7 +16,7 @@ SOURCES += \
     clases/fdisk.cpp \
     clases/funciones.cpp \
     clases/login.cpp \
-    clases/mbr.cpp \
+    clases/logout.cpp \
     clases/mkdisk.cpp \
     clases/mkfs.cpp \
     clases/mount.cpp \
@@ -37,7 +37,7 @@ HEADERS += \
 	clases/fdisk.h \
 	clases/funciones.h \
 	clases/login.h \
-	clases/mbr.h \
+	clases/logout.h \
 	clases/mkdisk.h \
 	clases/mkfs.h \
 	clases/mount.h \

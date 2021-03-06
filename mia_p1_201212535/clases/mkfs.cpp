@@ -11,6 +11,9 @@ mkfs::mkfs(string parametros[])
 
 void mkfs::ejecutar(){    
      //cout << "Parametros: " << this->id << " " << this->type << " " << this->fs << endl;
+    
+    //leerSuperBloque();
+
     if(validarParametros()){
         cout << "Todo correcto! :D" << endl;
         superbloque sb;
@@ -419,7 +422,7 @@ void mkfs::quemarRoot(){
     strcpy(bCarpeta.b_content[1].b_name, "..");
 
     bCarpeta.b_content[2].b_inodo = 1;
-    strcpy(bCarpeta.b_content[2].b_name, "user.txt");
+    strcpy(bCarpeta.b_content[2].b_name, "users.txt");
 
     bCarpeta.b_content[3].b_inodo = -1;
     strcpy(bCarpeta.b_content[3].b_name, "-1");
@@ -427,14 +430,14 @@ void mkfs::quemarRoot(){
     inodo iArchivo;
     iArchivo.i_uid = 1;
     iArchivo.i_gid = 1;
-    iArchivo.i_size = 0;
+    iArchivo.i_size = 27;
 
     strcpy(iArchivo.i_atime, obtenerFechaHora().c_str());
     strcpy(iArchivo.i_ctime, obtenerFechaHora().c_str());
     strcpy(iArchivo.i_mtime, obtenerFechaHora().c_str());
     iArchivo.i_block[0] = 1;
     for(int i=1; i < 15; i++){
-        iCarpeta.i_block[i] = -1; 
+        iArchivo.i_block[i] = -1; 
     }
     iArchivo.i_type = 1;
     iArchivo.i_perm = 664; 

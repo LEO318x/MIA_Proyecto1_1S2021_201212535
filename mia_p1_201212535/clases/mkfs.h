@@ -1,12 +1,12 @@
 #ifndef MKFS_H
 #define MKFS_H
 
-#include <string>
+#include <string.h>
+#include <stdio.h>
 #include <iostream>
-#include "funciones.h"
 #include <vector>
-#include "mount.h"
 #include "math.h"
+#include "funciones.h"
 
 using namespace std;
 class mkfs

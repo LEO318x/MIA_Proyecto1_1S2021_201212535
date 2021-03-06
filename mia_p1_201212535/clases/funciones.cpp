@@ -1,38 +1,39 @@
 #include "funciones.h"
+using namespace std;
 
-std::string quitarComillasRuta(std::string ruta){
-    std::string rutaAux = ruta;
+string quitarComillasRuta(string ruta){
+    string rutaAux = ruta;
     //Eliminamos las comillas de la ruta
     rutaAux.erase(remove(rutaAux.begin(), rutaAux.end(), '\"'), rutaAux.end());
 
     return rutaAux;
 }
 
-std::string quitarComillasTexto(std::string texto){
-    std::string textoAux = texto;
+string quitarComillasTexto(string texto){
+    string textoAux = texto;
     //Eliminamos las comillas del texto
     textoAux.erase(remove(textoAux.begin(), textoAux.end(), '\"'), textoAux.end());
 
     return textoAux;
 }
 
-std::string obtenerRutaSinArchivo(std::string ruta){
-    std::string rutaAux = quitarComillasRuta(ruta);
-    std::string rutaSinNombreArchivo;
+string obtenerRutaSinArchivo(string ruta){
+    string rutaAux = quitarComillasRuta(ruta);
+    string rutaSinNombreArchivo;
 
     size_t i = rutaAux.rfind("/", rutaAux.length());
-    if (i != std::string::npos) {
+    if (i != string::npos) {
         rutaSinNombreArchivo = (rutaAux.substr(0, i+1));
     }
 
     return rutaSinNombreArchivo;
 }
 
-std::string extraerNombreArchivo(std::string ruta){
-    std::string rutaAux = quitarComillasRuta(ruta);
-    std::string nombreArchivo;
+string extraerNombreArchivo(string ruta){
+    string rutaAux = quitarComillasRuta(ruta);
+    string nombreArchivo;
     const size_t buscarUltimoSlash = rutaAux.find_last_of("\\/");
-    if (std::string::npos != buscarUltimoSlash)
+    if (string::npos != buscarUltimoSlash)
     {
         rutaAux.erase(0, buscarUltimoSlash + 1);
     }
@@ -41,21 +42,21 @@ std::string extraerNombreArchivo(std::string ruta){
     return nombreArchivo;
 }
 
-std::string toLower(std::string cadena){
-    std::for_each(cadena.begin(), cadena.end(), [](char & c){
+string toLower(string cadena){
+    for_each(cadena.begin(), cadena.end(), [](char & c){
         c = ::tolower(c);
     });
     return cadena;
 }
 
-std::string toUpper(std::string cadena){
-    std::for_each(cadena.begin(), cadena.end(), [](char & c){
+string toUpper(string cadena){
+    for_each(cadena.begin(), cadena.end(), [](char & c){
         c = ::toupper(c);
     });
     return cadena;
 }
 
-std::string obtenerFechaHora(){
+string obtenerFechaHora(){
     time_t rawtime;
     struct tm * timeinfo;
     char fechaHora [16];
@@ -72,6 +73,42 @@ int obtenerNumeroRandom(){
     numero = rand();
 
     return numero;
+}
+
+bool verificarParticionID(string id){
+    bool verificacion = false;
+
+    Partition particion;
+    extern vector<Disco> registro;
+    for(int i=0; i < registro.size(); i++){
+        for(int j=0; j < registro[i].particiones.size(); j++){
+            if(registro[i].particiones[j].id == id){
+                //cout << "EXITO: Particion encontrada con el id " << id << endl;
+                //cout << "RUTA: " << registro[i].ruta << endl;
+                FILE *arch;
+                MBR mbr;
+                arch = fopen(quitarComillasRuta(registro[i].ruta).c_str(), "rb");
+                if(arch != NULL){
+                    fseek(arch,0,SEEK_SET);
+                    fread(&mbr, sizeof(MBR), 1, arch);
+                }
+                for(int k = 0; k < 4; k++){
+                    if(quitarComillasTexto(toLower(mbr.mbr_partition[k].part_name)) == quitarComillasTexto(toLower(registro[i].particiones[j].nombre))){
+                        //cout << "|--> Partición encontrada :DDDDDDD" << endl;
+                        verificacion = true;
+                        particion = mbr.mbr_partition[k];
+                        break;
+                    }
+                    if(i == 3){
+                        cout << "ERROR_FUNC#001: La particion no existe! :(" << endl;
+                    }             
+                }
+                fclose(arch);
+                break;
+            }
+        }
+    }
+    return verificacion;
 }
 
 Partition obtenerParticionID(string id){
@@ -107,8 +144,20 @@ extern vector<Disco> registro;
     return particion;
 }
 
-std::string obtenerRutaID(std::string id){
-std::string ruta;
+superbloque obtenerSuperBloque(Partition particion, string id){
+    superbloque sb;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
+    if(disco != NULL){
+       fseek(disco,particion.part_start,SEEK_SET); 
+       fread(&sb, sizeof(superbloque), 1, disco);
+       fclose(disco); 
+    }
+    return sb;
+}
+
+string obtenerRutaID(string id){
+string ruta;
 extern vector<Disco> registro;
     for(int i=0; i < registro.size(); i++){
         for(int j=0; j < registro[i].particiones.size(); j++){
@@ -120,12 +169,100 @@ extern vector<Disco> registro;
     return ruta;
 }
 
- int obtenerPosicionInodo(int inicioInodo, int indiceInodo){
+int obtenerPosicionInodo(int inicioInodo, int indiceInodo){
         int pos = inicioInodo + (indiceInodo*sizeof(inodo));
         return pos;
-    }
+}
 
-void escribirJournal(journal jlEscribir, std::string idPart){
+int buscarIndiceInodo(inodo ino, string nombre, string id){
+bloqueCarpeta bc;
+
+   for(int i = 0; i < 12; i++){
+        if(ino.i_block[i] != -1){
+            bc = obtenerBloqueCarpeta(id, ino.i_block[i]);
+            for(int j = 0; j < 4; j++){
+                if(bc.b_content[j].b_inodo != -1){
+                    cout << "Nombreb: " << bc.b_content[j].b_name << endl;
+                    cout << "Nombreb_: " << nombre << endl;
+                    if(bc.b_content[j].b_name == nombre){
+                        return bc.b_content[j].b_inodo; //retorno el indice del nodo :)
+                    }
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+bloqueCarpeta obtenerBloqueCarpeta(string id, int indiceBloque){
+    Partition part = obtenerParticionID(id);
+    superbloque sb = obtenerSuperBloque(part, id);
+    int inicioBloque = sb.s_block_start;
+    int bloquePos = inicioBloque + indiceBloque*sizeof(bloqueCarpeta);
+    bloqueCarpeta bc;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    if(disco != NULL){
+        fseek(disco, bloquePos, SEEK_SET);
+        fread(&bc, sizeof(bloqueCarpeta), 1, disco);        
+        fclose(disco);
+    }
+    return bc;
+}
+
+bloqueArchivo obtenerBloqueArchivo(string id, int indiceBloqueArch){
+    Partition part = obtenerParticionID(id);
+    superbloque sb = obtenerSuperBloque(part, id);
+    int inicioBloque = sb.s_block_start;
+    int bloquePos = inicioBloque + indiceBloqueArch*sizeof(bloqueArchivo);
+    bloqueArchivo ba;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    if(disco != NULL){
+        fseek(disco, bloquePos, SEEK_SET);
+        fread(&ba, sizeof(bloqueArchivo), 1, disco);        
+        fclose(disco);
+    }
+    return ba;
+}
+
+
+bloqueArchivo buscarIno(string ruta, string id){
+ Partition part = obtenerParticionID(id);
+ superbloque sb = obtenerSuperBloque(part, id);
+ int inicioInodo = sb.s_inode_start;
+ vector<string> rutaPam = split(quitarComillasRuta(ruta), "/");
+ inodo ino;
+ int indiceInodo;
+
+ bloqueArchivo ba;
+
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    if(disco != NULL){
+        fseek(disco, inicioInodo, SEEK_SET);
+        fread(&ino, sizeof(inodo), 1, disco);
+
+        for(int i = 1; i < rutaPam.size(); i++){
+           indiceInodo = buscarIndiceInodo(ino, rutaPam[i].c_str(), id);
+           if(indiceInodo == -1){cout << "ERROR_FUNC: No existe la data" << endl; break;}
+           fseek(disco, inicioInodo+(indiceInodo*sizeof(inodo)), SEEK_SET);
+           fread(&ino, sizeof(inodo), 1, disco);
+        }
+
+        //Separar luego en otro método
+        for(int i = 0; i < 12; i++){
+            if(ino.i_block[i] != -1){
+                ba = obtenerBloqueArchivo(id, ino.i_block[i]);
+                break;
+            }
+        }        
+    }
+    fclose(disco);
+    return ba;
+}
+
+void escribirJournal(journal jlEscribir, string idPart){
     Partition part = obtenerParticionID(idPart);
     FILE *disco;
     journal jl;    
@@ -144,7 +281,7 @@ void escribirJournal(journal jlEscribir, std::string idPart){
     fclose(disco);    
 }
 
-void obtenerDatosUsuario(std::string id){
+void obtenerDatosUsuario(string id){
     Partition part = obtenerParticionID(id);
     FILE *disco;
     superbloque sb;
@@ -156,11 +293,11 @@ void obtenerDatosUsuario(std::string id){
     fclose(disco);
 }
 
-std::vector<std::string> split(std::string cadena, std::string limitador){
-    std::vector<std::string> v;
+vector<string> split(string cadena, string limitador){
+    vector<string> v;
     size_t pos = 0;
-    std::string token;
-    while ((pos = cadena.find(limitador)) != std::string::npos) {
+    string token;
+    while ((pos = cadena.find(limitador)) != string::npos) {
         token = cadena.substr(0, pos);
         v.push_back(token);
         cadena.erase(0, pos + limitador.length());

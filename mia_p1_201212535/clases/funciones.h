@@ -3,23 +3,27 @@
 #include <string>
 #include <algorithm>
 #include <time.h> 
-#include "mbr.h"
 #include <vector>
-#include "mount.h"
+#include <iostream>
 #include "estructuras.h"
 
-    std::string quitarComillasRuta(std::string ruta);
-    std::string quitarComillasTexto(std::string ruta);
-    std::string obtenerRutaSinArchivo(std::string ruta);
-    std::string extraerNombreArchivo(std::string ruta);
-    std::string toLower(std::string cadena);
-    std::string toUpper(std::string cadena);
-    std::string obtenerFechaHora();
+using namespace std;
+    string quitarComillasRuta(string ruta);
+    string quitarComillasTexto(string ruta);
+    string obtenerRutaSinArchivo(string ruta);
+    string extraerNombreArchivo(string ruta);
+    string toLower(string cadena);
+    string toUpper(string cadena);
+    string obtenerFechaHora();
     int obtenerNumeroRandom();
-    Partition obtenerParticionID(std::string id);
-    std::string obtenerRutaID(std::string id);
+    Partition obtenerParticionID(string id);
+    superbloque obtenerSuperBloque(Partition particion, string id);
+    bloqueCarpeta obtenerBloqueCarpeta(string id, int indiceBloque);
+    int buscarInodo(string ruta, string nombre);
+    bloqueArchivo buscarIno(string ruta, string id);
+    string obtenerRutaID(string id);
     int obtenerPosicionInodo(int inicioInodo, int indiceInodo);
-    void escribirJournal(journal jlEscribir, std::string idPart);
-    std::vector<std::string> split(std::string cadena, std::string limitador);
-//#include "funciones.cpp"
+    void escribirJournal(journal jlEscribir, string idPart);
+    vector<string> split(string cadena, string limitador);
+    bool verificarParticionID(string id);
 #endif // FUNCIONES_H
