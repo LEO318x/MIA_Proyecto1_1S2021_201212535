@@ -20,6 +20,8 @@ SOURCES += \
     clases/mkdisk.cpp \
     clases/mkfs.cpp \
     clases/mount.cpp \
+    clases/pausa.cpp \
+    clases/rep.cpp \
     clases/rmdisk.cpp \
     clases/unmount.cpp \
         main.cpp \
@@ -41,6 +43,8 @@ HEADERS += \
 	clases/mkdisk.h \
 	clases/mkfs.h \
 	clases/mount.h \
+	clases/pausa.h \
+	clases/rep.h \
 	clases/rmdisk.h \
 	clases/unmount.h \
 	parser.h \

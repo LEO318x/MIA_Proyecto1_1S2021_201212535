@@ -24,7 +24,6 @@ void fdisk::ejecutarFdisk(){
     infoDisco();
 }
 
-
 bool fdisk::validarParametros(){
     FILE *archivo;    
     int tamanio;

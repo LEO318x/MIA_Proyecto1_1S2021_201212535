@@ -6,6 +6,9 @@
 #include <vector>
 #include <iostream>
 #include "estructuras.h"
+#include <bits/stdc++.h> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
 
 using namespace std;
     string quitarComillasRuta(string ruta);
@@ -26,4 +29,7 @@ using namespace std;
     void escribirJournal(journal jlEscribir, string idPart);
     vector<string> split(string cadena, string limitador);
     bool verificarParticionID(string id);
+    void crearCarpetaReporte(string ruta);
+    MBR obtenerMbr(string ruta);
+    
 #endif // FUNCIONES_H

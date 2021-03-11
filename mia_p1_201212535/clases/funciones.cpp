@@ -306,4 +306,30 @@ vector<string> split(string cadena, string limitador){
     return v;
 }
 
+void crearCarpetaReporte(string ruta){
+    if (mkdir(obtenerRutaSinArchivo(ruta).c_str(), 0777) == -1){ 
+            //std::cerr << "Error :  " << strerror(errno) << std::endl; 
+    
+    }
+        chmod(obtenerRutaSinArchivo(ruta).c_str(), 0777);
+        /*//Creamos el archivo
+        FILE *fichero;
+        fichero = fopen(quitarComillasRuta(ruta).c_str(),"w+b");
+        //if (!fichero)
+        //perror("fopen");            
+        fclose(fichero);*/
+}
 
+MBR obtenerMbr(string ruta){
+    MBR mbr;
+    FILE *arch;
+    arch = fopen(ruta.c_str(), "rb+");
+    if(arch != NULL){
+        fseek(arch,0,SEEK_SET);
+        fread(&mbr, sizeof(MBR), 1, arch);
+        fclose(arch);        
+    }else{
+        printf("Error!\n No se puede acceder al disco\n");
+    }
+    return mbr;
+}

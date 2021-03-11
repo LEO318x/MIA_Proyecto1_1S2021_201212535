@@ -13,6 +13,8 @@
 #include "clases/mkfs.h"
 #include "clases/login.h"
 #include "clases/logout.h"
+#include "clases/rep.h"
+#include "clases/pausa.h"
 
 
 using namespace std;
@@ -26,6 +28,7 @@ std::string p_mount[2]; // 0 = path, 1 = name
 std::string p_unmount[1]; // 0 = id
 std::string p_mkfs[3]; // 0 = id, 1=type, 2=fs
 std::string p_login[3]; //0=usuario, 1=password, 2=id
+std::string p_rep[4]; // 0 = name, 1 = path, 2 = id, 3 = ruta
 
 bool pPrimero = true;
 int yyerror(const char* mens)
@@ -136,6 +139,8 @@ COMANDOS: MKDISK {}
         | MKFS {}
         | LOGIN {}
         | LOGOUT {}
+        | REP {}
+        | PAUSE {}
         | COMENTARIO {}
 ;
 
@@ -241,4 +246,28 @@ P_LOGIN: tk_menos tk_usuario tk_igual tk_identificador {p_login[0] = $4;}
 ;
 
 LOGOUT: tk_logout {logout logout; logout.ejecutar();}
+;
+
+REP: tk_rep LP_REP {rep rep(p_rep); rep.ejecutar(); for(int i=0; i < 4; i++){p_rep[i].clear();}}
+;
+
+LP_REP: P_REP LP_REP
+        | P_REP
+;
+
+P_REP: tk_menos tk_name tk_igual tk_cadena {p_rep[0] = $4;}
+     | tk_menos tk_name tk_igual tk_identificador {p_rep[0] = $4;}
+
+     | tk_menos tk_path tk_igual tk_eruta {p_rep[1] = $4;}
+     | tk_menos tk_path tk_igual tk_cadena {p_rep[1] = $4;}
+     
+
+     | tk_menos tk_id tk_igual tk_identificador {p_rep[2] = $4;}
+     
+     | tk_menos tk_ruta tk_igual tk_eruta {p_rep[3] = $4;}
+     | tk_menos tk_ruta tk_igual tk_cadena {p_rep[3] = $4;}
+     
+;
+
+PAUSE: tk_pause {pausa pausa;}
 ;
