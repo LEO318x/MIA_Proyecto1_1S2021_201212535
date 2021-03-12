@@ -31,5 +31,8 @@ using namespace std;
     bool verificarParticionID(string id);
     void crearCarpetaReporte(string ruta);
     MBR obtenerMbr(string ruta);
+    string obtenerBitmapInodos(string idPart);
+    string obtenerBitmapBloques(string idPart);
+    vector<espacioLibre> obtenerEspacioLibreDisco(string ruta);
     
 #endif // FUNCIONES_H

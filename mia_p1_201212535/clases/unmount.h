@@ -17,6 +17,7 @@ public:
     void ejecutar();
     void mostrar();
     void desmontar();
+    void modificarFechaUnmount(string id);
 };
 
 #endif // UNMOUNT_H

@@ -33,6 +33,7 @@ extern vector<Disco> registro;
             if(registro[i].particiones.size() != 0){
             for(int j = 0; j < registro[i].particiones.size(); j++){
                 if(toLower(registro[i].particiones[j].id) == toLower(quitarComillasTexto(this->id))){
+                    modificarFechaUnmount(this->id);
                     registro[i].particiones.erase(registro[i].particiones.begin()+j);
                     cout << "EXITO: Particion Desmontada" << endl;
                     break;
@@ -46,4 +47,20 @@ extern vector<Disco> registro;
         }
     }
     
+}
+
+void unmount::modificarFechaUnmount(string id){
+    Partition part = obtenerParticionID(id);
+    superbloque sb = obtenerSuperBloque(part, id);
+
+    strcpy(sb.s_untime, obtenerFechaHora().c_str());
+
+    FILE *disco;  
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
+    if(disco != NULL){
+        fseek(disco, part.part_start, SEEK_SET);
+        fwrite(&sb, sizeof(superbloque), 1, disco);
+        fclose(disco);
+    }
+
 }

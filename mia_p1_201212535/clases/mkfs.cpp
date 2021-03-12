@@ -60,6 +60,7 @@ void mkfs::ejecutar(){
 
         }
         strcpy(sb.s_mtime, obtenerFechaHora().c_str());
+        strcpy(sb.s_untime, "00/00/00 00:00");
         sb.s_mnt_count = 1;
         sb.s_inode_size = sizeof(inodo);
         sb.s_block_size = 64;

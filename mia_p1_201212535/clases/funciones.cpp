@@ -146,13 +146,17 @@ extern vector<Disco> registro;
 
 superbloque obtenerSuperBloque(Partition particion, string id){
     superbloque sb;
-    FILE *disco;
-    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
-    if(disco != NULL){
-       fseek(disco,particion.part_start,SEEK_SET); 
-       fread(&sb, sizeof(superbloque), 1, disco);
-       fclose(disco); 
-    }
+    if(!verificarParticionID(id)){
+        cout << "ERROR: No existe la partición!" << endl;
+    }else{
+        FILE *disco;
+        disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
+        if(disco != NULL){
+        fseek(disco,particion.part_start,SEEK_SET); 
+        fread(&sb, sizeof(superbloque), 1, disco);
+        fclose(disco); 
+        }
+    }    
     return sb;
 }
 
@@ -225,7 +229,6 @@ bloqueArchivo obtenerBloqueArchivo(string id, int indiceBloqueArch){
     }
     return ba;
 }
-
 
 bloqueArchivo buscarIno(string ruta, string id){
  Partition part = obtenerParticionID(id);
@@ -329,7 +332,127 @@ MBR obtenerMbr(string ruta){
         fread(&mbr, sizeof(MBR), 1, arch);
         fclose(arch);        
     }else{
-        printf("Error!\n No se puede acceder al disco\n");
+        printf("Error! No se puede acceder al disco\n");
     }
     return mbr;
 }
+
+string obtenerBitmapInodos(string idPart){
+    string stringBitmap;
+    if(!verificarParticionID(idPart)){
+        cout << "ERROR: La partición no existe!" << endl;
+    }else{
+        Partition part = obtenerParticionID(idPart);
+        superbloque sb;    
+        FILE *disco;
+        char buffer = '8';
+        disco = fopen(quitarComillasRuta(obtenerRutaID(idPart)).c_str(), "rb+");
+        fseek(disco,part.part_start,SEEK_SET); 
+        fread(&sb, sizeof(superbloque), 1, disco);
+        char bitmapInodos[sb.s_inodes_count];
+        if(disco != NULL){
+            /*fseek(disco,sb.s_bm_inode_start,SEEK_SET);
+            fwrite(&buffer,sizeof(buffer),1,disco);
+            fseek(disco,sb.s_bm_block_start-1,SEEK_SET);
+            fwrite(&buffer,sizeof(buffer),1,disco);*/
+
+            fseek(disco,sb.s_bm_inode_start,SEEK_SET);
+            fread(&bitmapInodos, sb.s_inodes_count, 1, disco);        
+            for(int i=0; i < sb.s_inodes_count; i++){
+                stringBitmap += bitmapInodos[i];
+            }
+        fclose(disco); 
+        }
+    }
+    return stringBitmap;    
+}
+
+string obtenerBitmapBloques(string idPart){
+
+    string stringBloques;
+    if(!verificarParticionID(idPart)){
+        cout << "ERROR: La partición no existe!" << endl;        
+    }else{
+    Partition part = obtenerParticionID(idPart);
+    superbloque sb;    
+    FILE *disco;
+    char buffer = '9';
+    disco = fopen(quitarComillasRuta(obtenerRutaID(idPart)).c_str(), "rb+");
+    fseek(disco,part.part_start,SEEK_SET); 
+    fread(&sb, sizeof(superbloque), 1, disco);
+    char bitmapBloques[sb.s_blocks_count];
+        if(disco != NULL){
+            /*fseek(disco,sb.s_bm_block_start,SEEK_SET);
+            fwrite(&buffer,sizeof(buffer),1,disco);
+            fseek(disco,sb.s_bm_block_start-1,SEEK_SET);
+            fwrite(&buffer,sizeof(buffer),1,disco);*/
+            fseek(disco,sb.s_bm_block_start,SEEK_SET);
+            fread(&bitmapBloques, sb.s_blocks_count, 1, disco);        
+            for(int i=0; i < sb.s_blocks_count; i++){
+                stringBloques += bitmapBloques[i];
+            }
+        fclose(disco); 
+        }
+    }
+    return stringBloques; 
+}
+
+vector<espacioLibre> obtenerEspacioLibreDisco(string ruta){
+    FILE *archivo;
+    archivo = fopen(quitarComillasRuta(ruta).c_str(), "rb+");
+    fseek(archivo, 0, SEEK_SET);
+    MBR mbr;
+    fread(&mbr, sizeof(MBR), 1, archivo);
+
+    vector<Partition> particionActiva;
+    vector<Partition> particionAux;
+    for (int i = 0; i < 4; i++){
+        if(mbr.mbr_partition[i].part_status != '0'){
+            particionActiva.push_back(mbr.mbr_partition[i]);
+        }
+    }
+
+    vector<int> ordenStart;
+    for (int i = 0; i < particionActiva.size(); i++){
+        ordenStart.push_back(particionActiva[i].part_start);
+    }
+
+    sort(ordenStart.begin(), ordenStart.end());
+    
+    for(int i = 0; i < ordenStart.size(); i++){
+        int auxs;
+        auxs = ordenStart[i];
+        for(int j = 0; j < particionActiva.size(); j++){
+            if(particionActiva[j].part_start == auxs){
+                particionAux.push_back(particionActiva[j]);
+            }
+        }
+    }
+
+    //Espacios Vacios
+    int inicioVacio = sizeof(MBR);
+    vector<espacioLibre> vES;
+    //for(int i = 0; i < particionAux.size(); i++){
+    int tamanio;
+    for(int i = 0; i < particionAux.size(); i++){
+        espacioLibre espacioVacio; 
+        tamanio = particionAux[i].part_start - inicioVacio;
+        if(tamanio > 0){
+            espacioVacio.inicio = inicioVacio;
+            espacioVacio.tamanio = tamanio;
+            vES.push_back(espacioVacio);
+        }
+        inicioVacio =  particionAux[i].part_start + particionAux[i].part_size; 
+    }
+        espacioLibre espacioVacio; 
+        tamanio = mbr.mbr_tamano - inicioVacio;
+        if(tamanio > 0){
+            espacioVacio.inicio = inicioVacio;
+            espacioVacio.tamanio = tamanio;
+            vES.push_back(espacioVacio);
+        }
+
+    fclose(archivo);
+    return vES;
+}
+

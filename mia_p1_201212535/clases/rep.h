@@ -23,6 +23,10 @@ public:
     bool validarParametros();
     void reporteMBR();
     void crearReporte(string data);
+    void reporteBmInode();
+    void reporteBmBloques();
+    void reporteSb();
+    void reporteDisk();
 };
 
 #endif // REP_H

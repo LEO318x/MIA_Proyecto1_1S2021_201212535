@@ -140,9 +140,27 @@ void mount::montarParticion(){
                 auxVector.id = ident;
                 auxVector.nombre = quitarComillasTexto(this->nombre);
                 registro[i].particiones.push_back(auxVector);
+                modificarFechaMount(ident);
                 cout << "Exito: Particion Montada :3" << endl; 
         }
     }
+}
+
+void mount::modificarFechaMount(string id){
+    Partition part = obtenerParticionID(id);
+    superbloque sb = obtenerSuperBloque(part, id);
+
+    strcpy(sb.s_mtime, obtenerFechaHora().c_str());
+    sb.s_mnt_count++;
+
+    FILE *disco;  
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb+");
+    if(disco != NULL){
+        fseek(disco, part.part_start, SEEK_SET);
+        fwrite(&sb, sizeof(superbloque), 1, disco);
+        fclose(disco);
+    }
+
 }
 
 

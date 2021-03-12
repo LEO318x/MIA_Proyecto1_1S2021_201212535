@@ -20,8 +20,15 @@ fdisk::fdisk(string parametros[]){
 
 void fdisk::ejecutarFdisk(){
     //cout << stoi(this->add) << endl;    
-    validarParametros();
-    infoDisco();
+    if(validarParametros()){
+        if(this->pPrimero == "size"){
+            crearParticion();
+        }else if(this->pPrimero == "delete"){
+             eliminarParticion();
+        }
+
+        infoDisco();
+    }
 }
 
 bool fdisk::validarParametros(){
@@ -105,16 +112,19 @@ bool fdisk::validarParametros(){
             return verificacion = false;
         }
         //Eliminar Particion
-        eliminarParticion();
-    }else if(this->pPrimero == "size"){
-        //Crear Particion
-        crearParticion();
+        //eliminarParticion();
+        return verificacion = true;
     }
 
-    /*if(tamanio <= 0){
+    if(this->name.length() > 15){
+        cout << "ERROR: El nombre de la partición no puede exceder de los 16 carácteres" << endl;
+        return verificacion = false;
+    }
+
+    if(tamanio <= 0){
         cout << "ERROR: El tamaño no puede ser 0 o menor que 0, intenta de nuevo" << endl;
         return verificacion=false;
-    }*/
+    }
     
 
     archivo = fopen(quitarComillasRuta(this->path).c_str(), "rb+");

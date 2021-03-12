@@ -7,6 +7,7 @@ pausa::pausa()
 }
 
 void pausa::ejecutar(){
+    string txt;
     cout << "Ejecución pausada, pulse cualquier tecla para continuar..." << endl;
-    cin.get();
+    getline(cin, txt);
 }

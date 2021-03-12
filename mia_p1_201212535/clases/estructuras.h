@@ -116,6 +116,13 @@ typedef struct bm_espacio{
     int tamanio;
 };
 
+struct espacioLibre{
+        int inicio;
+        int tamanio;
+        int tipo = 0;
+        char type = 'v';
+};
+
 /*
 * LOGIN
 */

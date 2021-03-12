@@ -23,12 +23,6 @@ private:
     char pF;
     char pU;
     char pType;
-
-    struct espacioLibre
-    {
-        int inicio;
-        int tamanio;
-    };
     
 public:
     fdisk(string []);

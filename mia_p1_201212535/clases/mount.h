@@ -24,6 +24,7 @@ public:
     bool verificarDiscoMontado();
     bool verificarParticion();
     void montarDisco();
+    void modificarFechaMount(string id);
 };
 
 #endif // MOUNT_H
