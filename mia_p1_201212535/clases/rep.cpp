@@ -372,28 +372,32 @@ string rep::obtenerInodosRec(int indInodo){
 
     data += "";
     data = "Inodo"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
-    data += "<tr><td colspan=\"2\">INODO</td></tr>";
-    data += "<tr><td>Propietario</td><td>"+to_string(ind.i_uid)+"</td></tr>";
-    data += "<tr><td>Grupo</td><td>"+to_string(ind.i_gid)+"</td></tr>";
-    data += "<tr><td>Tamaño</td><td>"+to_string(ind.i_size)+"</td></tr>";
-    data += "<tr><td>Tipo</td><td>"+string(1, ind.i_type)+"</td></tr>";
-    data += "<tr><td>Permisos</td><td>"+to_string(ind.i_perm)+"</td></tr>";
-    data += "<tr><td>Fecha Acceso</td><td>"+string(ind.i_atime)+"</td></tr>";
-    data += "<tr><td>Fecha Creación</td><td>"+string(ind.i_ctime)+"</td></tr>";
-    data += "<tr><td>Fecha Modificación</td><td>"+string(ind.i_mtime)+"</td></tr>";
-    for(int i = 0; i < 12; i++ ){
-        data += "<tr><td>APT"+to_string(i)+"</td><td>"+to_string(ind.i_block[i])+"</td></tr>";
+    data += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"dodgerblue\">INODO</td></tr>\n";
+    data += "<tr><td>Propietario</td><td>"+to_string(ind.i_uid)+"</td></tr>\n";
+    data += "<tr><td>Grupo</td><td>"+to_string(ind.i_gid)+"</td></tr>\n";
+    data += "<tr><td>Tamaño</td><td>"+to_string(ind.i_size)+"</td></tr>\n";
+    data += "<tr><td>Tipo</td><td>"+string(1, ind.i_type)+"</td></tr>\n";
+    data += "<tr><td>Permisos</td><td>"+to_string(ind.i_perm)+"</td></tr>\n";
+    data += "<tr><td>Fecha Acceso</td><td>"+string(ind.i_atime)+"</td></tr>\n";
+    data += "<tr><td>Fecha Creación</td><td>"+string(ind.i_ctime)+"</td></tr>\n";
+    data += "<tr><td>Fecha Modificación</td><td>"+string(ind.i_mtime)+"</td></tr>\n";
+    for(int i = 0; i < 15; i++ ){
+        data += "<tr><td>APT"+to_string(i)+"</td><td port=\""+to_string(i)+"\">"+to_string(ind.i_block[i])+"</td></tr>\n";
     }
-    data += "</table>>];";
+    data += "</table>>];\n";
 
     for (int i = 0; i < 12; i++){
         if(ind.i_block[i] != -1){
             if(ind.i_type == '0'){ //bloque carpeta
                 //cout << "Entra acá Carpeta" << endl;                
                 data += bloqueCarpetaRec(ind.i_block[i]);
+                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueCarpeta"+to_string(indInodo)+":T;\n";
+
             }else if(ind.i_type == '1'){ //bloque archivo
                 //cout << "Entra acá Archivo" << endl;
-                data += bloqueArchivoRec(ind.i_block[i]); 
+                data += bloqueArchivoRec(ind.i_block[i]);
+                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueArchivo"+to_string(indInodo)+":T;\n";
+ 
             }
         }
     }
@@ -408,12 +412,12 @@ string rep::bloqueCarpetaRec(int indInodo){
         //cout << "bCN " << bC.b_content->b_name << endl;
 
         dataC += "bloqueCarpeta"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
-        dataC += "<tr><td colspan=\"2\">Bloque Carpeta</td></tr>";
+        dataC += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"green2\">Bloque Carpeta</td></tr>\n";
         for(int i = 0; i < 4; i++){
-            dataC += "<tr><td>Nombre:</td><td>"+string(bC.b_content[i].b_name)+"</td></tr>";
-            dataC += "<tr><td>Apuntador Inodo:</td><td>"+to_string(bC.b_content[i].b_inodo)+"</td></tr>";
+            dataC += "<tr><td>"+string(bC.b_content[i].b_name)+"</td>\n";
+            dataC += "<td port=\""+to_string(bC.b_content[i].b_inodo)+"\">"+to_string(bC.b_content[i].b_inodo)+"</td></tr>\n";
         }
-        dataC += "</table>>];";
+        dataC += "</table>>];\n";
 
         for (int i = 0; i < 4; i++){
             if(bC.b_content[i].b_inodo != -1 && string(bC.b_content[i].b_name) != "." && string(bC.b_content[i].b_name) != ".."){
@@ -422,6 +426,7 @@ string rep::bloqueCarpetaRec(int indInodo){
                 //cout << bC.b_content[i].b_name << endl;
                 //cout << "R/" << endl;
                 dataC += obtenerInodosRec(bC.b_content[i].b_inodo);
+                dataC += "bloqueCarpeta"+to_string(indInodo)+":"+to_string(bC.b_content[i].b_inodo)+"->Inodo"+to_string(bC.b_content[i].b_inodo)+":T;\n";
             }
         }
 
@@ -433,9 +438,9 @@ string rep::bloqueArchivoRec(int indInodo){
     bloqueArchivo bA = obtenerBloqueArchivo(this->id, indInodo);
     //cout << bA.b_content << endl;
     dataA += "bloqueArchivo"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
-    dataA += "<tr><td colspan=\"2\">Bloque Archivo</td></tr>";
+    dataA += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"gold1\">Bloque Archivo</td></tr>";
     dataA += "<tr><td>Contenido:</td><td>"+string(bA.b_content)+"</td></tr>";
-    dataA += "</table>>];";       
+    dataA += "</table>>];\n";       
 
     return dataA;
 }
