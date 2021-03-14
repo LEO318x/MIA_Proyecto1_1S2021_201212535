@@ -16,6 +16,8 @@ private:
     string path;
     string id;
     string ruta;
+    vector<string> bloque;
+    int auxRB = 0;
 
 public:
     rep(string parametros[]);
@@ -33,6 +35,9 @@ public:
     string obtenerInodosRec(int indInodo);
     string bloqueCarpetaRec(int indInodo);
     string bloqueArchivoRec(int indInodo);
+    string obtenerBloqueRec(int indInodo);
+    string bloqueCarpetaRecSinInodo(int indInodo);
+    string bloqueArchivoRecSinInodo(int indInodo);
 };
 
 #endif // REP_H

@@ -35,6 +35,23 @@ void rep::ejecutar(){
         }else if(toLower(this->name) == "tree"){
             //reporteTree();
             crearReporte(obtenerInodosRec(0));
+        }else if(toLower(this->name) == "block"){
+            //obtenerBloqueRec(0);
+            crearReporte(obtenerBloqueRec(0)); 
+            //cout << "---> "<< this->bloque.size() << endl;
+            string data;
+            string apunt;
+            for(int i = 0; i<this->bloque.size(); i++){
+                data += this->bloque[i];
+                if(i != 0){
+                    apunt += "->bloque"+to_string(i);
+                }else{
+                    apunt += "bloque"+to_string(i);
+                }
+                
+            }
+            data += apunt;
+            crearReporte(data);          
         }
         
     }
@@ -364,7 +381,6 @@ void rep::crearReporte(string data){
     system(comando.c_str());
 }
 
-
 string rep::obtenerInodosRec(int indInodo){
     string data;
     superbloque sb = obtenerSuperBloque(obtenerParticionID(this->id), this->id);
@@ -391,12 +407,12 @@ string rep::obtenerInodosRec(int indInodo){
             if(ind.i_type == '0'){ //bloque carpeta
                 //cout << "Entra acá Carpeta" << endl;                
                 data += bloqueCarpetaRec(ind.i_block[i]);
-                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueCarpeta"+to_string(indInodo)+":T;\n";
+                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueCarpeta"+to_string(ind.i_block[i])+":T;\n";
 
             }else if(ind.i_type == '1'){ //bloque archivo
                 //cout << "Entra acá Archivo" << endl;
                 data += bloqueArchivoRec(ind.i_block[i]);
-                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueArchivo"+to_string(indInodo)+":T;\n";
+                data += "Inodo"+to_string(indInodo)+":"+to_string(i)+"->bloqueArchivo"+to_string(ind.i_block[i])+":T;\n";
  
             }
         }
@@ -438,6 +454,73 @@ string rep::bloqueArchivoRec(int indInodo){
     bloqueArchivo bA = obtenerBloqueArchivo(this->id, indInodo);
     //cout << bA.b_content << endl;
     dataA += "bloqueArchivo"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+    dataA += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"gold1\">Bloque Archivo</td></tr>";
+    dataA += "<tr><td>Contenido:</td><td>"+string(bA.b_content)+"</td></tr>";
+    dataA += "</table>>];\n";       
+
+    return dataA;
+}
+
+string rep::obtenerBloqueRec(int indInodo){
+string data;
+    superbloque sb = obtenerSuperBloque(obtenerParticionID(this->id), this->id);
+    inodo ind = obtenerInodo(this->id, indInodo);
+
+    
+    for (int i = 0; i < 12; i++){
+        if(ind.i_block[i] != -1){
+            if(ind.i_type == '0'){ //bloque carpeta
+                //cout << "Entra acá Carpeta" << endl;                
+                data = bloqueCarpetaRecSinInodo(ind.i_block[i]);
+                //data += "bloque"+to_string(ind.i_block[i])+":T;\n";
+                this->bloque.push_back(data);
+
+            }else if(ind.i_type == '1'){ //bloque archivo
+                //cout << "Entra acá Archivo" << endl;
+                data = bloqueArchivoRecSinInodo(ind.i_block[i]);
+                //data += "bloque"+to_string(ind.i_block[i])+":T;\n";
+                this->bloque.push_back(data);
+
+ 
+            }
+        }
+    }
+    return data;   
+}
+
+string rep::bloqueCarpetaRecSinInodo(int indInodo){
+    string dataC;
+    bloqueCarpeta bC = obtenerBloqueCarpeta(this->id, indInodo);
+
+        //cout << "bCI " << bC.b_content->b_inodo << endl;
+        //cout << "bCN " << bC.b_content->b_name << endl;
+
+        dataC += "bloque"+to_string(this->auxRB++)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+        dataC += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"green2\">Bloque Carpeta</td></tr>\n";
+        for(int i = 0; i < 4; i++){
+            dataC += "<tr><td>"+string(bC.b_content[i].b_name)+"</td>\n";
+            dataC += "<td port=\""+to_string(bC.b_content[i].b_inodo)+"\">"+to_string(bC.b_content[i].b_inodo)+"</td></tr>\n";
+        }
+        dataC += "</table>>];\n";
+
+        for (int i = 0; i < 4; i++){
+            if(bC.b_content[i].b_inodo != -1 && string(bC.b_content[i].b_name) != "." && string(bC.b_content[i].b_name) != ".."){
+                //cout << "R" << endl;
+                //cout << bC.b_content[i].b_inodo << endl;
+                //cout << bC.b_content[i].b_name << endl;
+                //cout << "R/" << endl;
+                dataC += obtenerBloqueRec(bC.b_content[i].b_inodo);
+            }
+        }
+
+    return dataC;
+}
+
+string rep::bloqueArchivoRecSinInodo(int indInodo){
+    string dataA;
+    bloqueArchivo bA = obtenerBloqueArchivo(this->id, indInodo);
+    //cout << bA.b_content << endl;
+    dataA += "bloque"+to_string(this->auxRB++)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
     dataA += "<tr><td port=\"T\" colspan=\"2\" bgcolor=\"gold1\">Bloque Archivo</td></tr>";
     dataA += "<tr><td>Contenido:</td><td>"+string(bA.b_content)+"</td></tr>";
     dataA += "</table>>];\n";       
