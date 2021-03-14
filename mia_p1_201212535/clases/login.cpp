@@ -75,7 +75,8 @@ bool login::iniciarSesion(){
                 cout << "GRUPO: " << aux[i][2] << endl;
                 cout << "USER: " << aux[i][3] << endl;
                 cout << "PASS: " << aux[i][4] << endl;*/
-                string gid = aux[i][0];
+                string pid = this->id;
+                string uid = aux[i][0];
                 string tipo = aux[i][1];
                 string grupo = aux[i][2];
                 string user = aux[i][3];
@@ -83,7 +84,8 @@ bool login::iniciarSesion(){
 
                 if(user == this->usuario && pass == this->password){
                     extern infoLogin loginfo;
-                    loginfo.gid = gid;
+                    loginfo.pid = pid;
+                    loginfo.uid = uid;
                     loginfo.tipo = tipo;
                     loginfo.grupo = grupo;
                     loginfo.user = user;

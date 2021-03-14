@@ -17,6 +17,7 @@ SOURCES += \
     clases/funciones.cpp \
     clases/login.cpp \
     clases/logout.cpp \
+    clases/mkdirc.cpp \
     clases/mkdisk.cpp \
     clases/mkfs.cpp \
     clases/mount.cpp \
@@ -40,6 +41,7 @@ HEADERS += \
 	clases/funciones.h \
 	clases/login.h \
 	clases/logout.h \
+	clases/mkdirc.h \
 	clases/mkdisk.h \
 	clases/mkfs.h \
 	clases/mount.h \

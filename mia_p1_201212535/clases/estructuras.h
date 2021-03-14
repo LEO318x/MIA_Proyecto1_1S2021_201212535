@@ -127,6 +127,8 @@ struct espacioLibre{
 * LOGIN
 */
 typedef struct infoLogin{
+    string pid = "";
+    string uid = "";
     string gid = "";
     string tipo = "";
     string grupo = "";

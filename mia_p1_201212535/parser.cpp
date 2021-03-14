@@ -85,6 +85,7 @@
 #include "clases/logout.h"
 #include "clases/rep.h"
 #include "clases/pausa.h"
+#include "clases/mkdirc.h"
 
 
 using namespace std;
@@ -99,6 +100,7 @@ std::string p_unmount[1]; // 0 = id
 std::string p_mkfs[3]; // 0 = id, 1=type, 2=fs
 std::string p_login[3]; //0=usuario, 1=password, 2=id
 std::string p_rep[4]; // 0 = name, 1 = path, 2 = id, 3 = ruta
+std::string p_mkdir[2]; //0 = ruta, 1 = p
 
 bool pPrimero = true;
 int yyerror(const char* mens)
@@ -107,7 +109,7 @@ std::cout << mens <<" "<<yytext<< std::endl;
 return 0;
 }
 
-#line 111 "parser.cpp"
+#line 113 "parser.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -230,7 +232,10 @@ enum yysymbol_kind_t
   YYSYMBOL_REP = 92,                       /* REP  */
   YYSYMBOL_LP_REP = 93,                    /* LP_REP  */
   YYSYMBOL_P_REP = 94,                     /* P_REP  */
-  YYSYMBOL_PAUSE = 95                      /* PAUSE  */
+  YYSYMBOL_MKDIR = 95,                     /* MKDIR  */
+  YYSYMBOL_LP_MKDIR = 96,                  /* LP_MKDIR  */
+  YYSYMBOL_P_MKDIR = 97,                   /* P_MKDIR  */
+  YYSYMBOL_PAUSE = 98                      /* PAUSE  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -541,18 +546,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  51
+#define YYFINAL  56
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   129
+#define YYLAST   137
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  66
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  30
+#define YYNNTS  33
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  81
+#define YYNRULES  88
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  155
+#define YYNSTATES  166
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   320
@@ -608,15 +613,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   126,   126,   129,   130,   133,   134,   135,   136,   137,
-     138,   139,   140,   141,   142,   143,   144,   147,   149,   152,
-     153,   156,   157,   158,   159,   160,   163,   164,   167,   170,
-     171,   174,   176,   177,   179,   180,   182,   183,   184,   185,
-     187,   189,   190,   193,   196,   197,   200,   203,   204,   206,
-     207,   208,   209,   213,   216,   219,   222,   223,   226,   227,
-     228,   231,   234,   235,   238,   239,   241,   242,   243,   245,
-     248,   251,   254,   255,   258,   259,   261,   262,   265,   267,
-     268,   272
+       0,   128,   128,   131,   132,   135,   136,   137,   138,   139,
+     140,   141,   142,   143,   144,   145,   146,   147,   150,   152,
+     155,   156,   159,   160,   161,   162,   163,   166,   167,   170,
+     173,   174,   177,   179,   180,   182,   183,   185,   186,   187,
+     188,   190,   192,   193,   196,   199,   200,   203,   206,   207,
+     209,   210,   211,   212,   216,   219,   222,   225,   226,   229,
+     230,   231,   234,   237,   238,   241,   242,   244,   245,   246,
+     248,   251,   254,   257,   258,   261,   262,   264,   265,   268,
+     270,   271,   275,   278,   279,   282,   283,   284,   287
 };
 #endif
 
@@ -648,7 +653,7 @@ static const char *const yytname[] =
   "P_MKDISK", "RMDISK", "FDISK", "LP_FDISK", "P_FDISK", "EXEC", "P_EXEC",
   "MOUNT", "LP_MOUNT", "P_MOUNT", "UNMOUNT", "P_UNMOUNT", "MKFS",
   "LP_MKFS", "P_MKFS", "LOGIN", "LP_LOGIN", "P_LOGIN", "LOGOUT", "REP",
-  "LP_REP", "P_REP", "PAUSE", YY_NULLPTR
+  "LP_REP", "P_REP", "MKDIR", "LP_MKDIR", "P_MKDIR", "PAUSE", YY_NULLPTR
 };
 
 static const char *
@@ -687,22 +692,23 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,   -39,   -34,    -4,    12,    14,    15,    16,   -44,   -44,
-      17,    18,   -44,    44,   -44,    -3,   -44,   -44,   -44,   -44,
-     -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -13,   -44,
-     -39,    19,   -17,   -44,    -4,     4,   -44,    12,    25,   -44,
-     -26,   -44,    15,     0,   -44,    16,    38,   -44,   -24,   -44,
-      18,   -44,   -44,    20,    21,    22,    23,   -44,    24,    26,
-      27,    28,    29,    30,    31,    32,    33,   -44,    34,    35,
-     -44,    36,    37,    39,    40,   -44,    41,    42,    43,   -44,
-      45,    46,    47,    48,    49,   -44,    54,   -43,    56,    57,
-      -2,    62,     1,   -36,   -15,    59,    60,    61,     5,     7,
-      -9,    63,    64,    65,    66,    67,    -8,   -16,     9,    11,
-      -5,    68,    13,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
+      -3,   -34,   -21,    -5,    17,    19,    20,    21,    22,   -44,
+     -44,    23,    24,   -44,    53,   -44,    -3,   -44,   -44,   -44,
+     -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
+     -17,   -44,   -34,    28,   -14,   -44,    -5,     5,   -44,    17,
+      29,   -44,   -26,   -44,    20,    -4,   -44,    21,     4,   -44,
+      22,    43,   -44,   -24,   -44,    24,   -44,   -44,    25,    26,
+      27,    30,   -44,    31,    32,    33,    34,    35,    36,    37,
+      38,    39,   -44,    40,    41,   -44,    42,    44,    45,    46,
+     -44,    47,    48,    49,   -44,    50,   -44,   -44,    51,    52,
+      54,    55,    56,   -44,    63,   -43,    64,    65,     1,    67,
+       3,   -36,   -13,    66,    68,    69,     9,    10,    -7,    70,
+      71,    72,    73,    74,    -6,   -10,    12,    14,    16,    -2,
+      75,    18,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
      -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
      -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
      -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
-     -44,   -44,   -44,   -44,   -44
+     -44,   -44,   -44,   -44,   -44,   -44
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -710,38 +716,41 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     0,    70,    81,
-       0,     0,    17,     0,     2,     4,    16,     5,     6,     7,
-       8,     9,    10,    11,    12,    13,    14,    15,     0,    18,
-      20,     0,     0,    28,    30,     0,    46,    48,     0,    53,
-       0,    55,    57,     0,    61,    63,     0,    43,     0,    71,
-      73,     1,     3,     0,     0,     0,     0,    19,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    29,     0,     0,
-      47,     0,     0,     0,     0,    56,     0,     0,     0,    62,
-       0,     0,     0,     0,     0,    72,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    71,
+      88,     0,     0,    18,     0,     2,     4,    17,     5,     6,
+       7,     8,     9,    10,    11,    12,    13,    14,    16,    15,
+       0,    19,    21,     0,     0,    29,    31,     0,    47,    49,
+       0,    54,     0,    56,    58,     0,    62,    64,     0,    82,
+      84,     0,    44,     0,    72,    74,     1,     3,     0,     0,
+       0,     0,    20,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    30,     0,     0,    48,     0,     0,     0,     0,
+      57,     0,     0,     0,    63,     0,    87,    83,     0,     0,
+       0,     0,     0,    73,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    21,    23,    22,    24,    25,    27,    26,
-      31,    33,    32,    38,    37,    35,    34,    39,    36,    40,
-      41,    42,    49,    50,    52,    51,    54,    59,    58,    60,
-      69,    65,    64,    68,    67,    66,    44,    45,    77,    76,
-      74,    75,    78,    80,    79
+       0,     0,    22,    24,    23,    25,    26,    28,    27,    32,
+      34,    33,    39,    38,    36,    35,    40,    37,    41,    42,
+      43,    50,    51,    53,    52,    55,    60,    59,    61,    70,
+      66,    65,    69,    68,    67,    86,    85,    45,    46,    78,
+      77,    75,    76,    79,    81,    80
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -44,   -44,    58,   -44,   -44,   -44,    50,   -44,   -44,   -44,
-      55,   -44,   -44,   -44,   -44,    83,   -44,   -44,   -44,   -44,
-      85,   -44,   -44,    84,   -44,   -44,   -44,    52,   -44,   -44
+     -44,   -44,    62,   -44,   -44,   -44,    60,   -44,   -44,   -44,
+      57,   -44,   -44,   -44,   -44,    86,   -44,   -44,   -44,   -44,
+      90,   -44,   -44,    88,   -44,   -44,   -44,    81,   -44,   -44,
+      87,   -44,   -44
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,    13,    14,    15,    16,    17,    29,    30,    18,    19,
-      33,    34,    20,    47,    21,    36,    37,    22,    39,    23,
-      41,    42,    24,    44,    45,    25,    26,    49,    50,    27
+      -1,    14,    15,    16,    17,    18,    31,    32,    19,    20,
+      35,    36,    21,    52,    22,    38,    39,    23,    41,    24,
+      43,    44,    25,    46,    47,    26,    27,    54,    55,    28,
+      49,    50,    29
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -749,86 +758,89 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       1,     2,     3,     4,     5,     6,     7,   123,    72,    81,
-      73,    82,    83,   114,   115,    59,    60,    61,    62,    53,
-      54,    28,   124,     8,     9,    74,    31,    10,    11,    84,
-      63,    64,    65,    66,    55,    56,    76,    68,   143,    69,
-     144,   125,   145,   126,    51,    77,    78,   134,   141,   135,
-     142,   150,    58,   151,   118,   119,    32,   121,   122,   130,
-     131,    71,    12,   132,   133,   146,   147,   148,   149,   153,
-     154,    80,    35,    52,    38,    40,    43,    46,    48,     0,
-      57,     0,     0,     0,    86,    87,    88,    89,    90,    67,
-      91,    92,    93,    94,    95,    96,    97,    98,    99,   100,
-     101,   102,    85,   103,   104,   105,   106,   107,   113,   108,
-     109,   110,   111,   112,   116,   117,   120,   127,   128,   129,
-      70,   136,   137,   138,   139,   140,   152,    75,     0,    79
+       1,     2,     3,     4,     5,     6,     7,   132,    77,    89,
+      78,    90,    91,   123,   124,    58,    59,     8,    64,    65,
+      66,    67,   133,     9,    10,    79,    30,    11,    12,    92,
+      60,    61,    81,    68,    69,    70,    71,    85,    73,    33,
+      74,    82,    83,   134,   152,   135,   153,    86,   154,   143,
+     150,   144,   151,    56,   161,    34,   162,   127,   128,   130,
+     131,    63,    13,   139,   140,    76,   141,   142,   155,   156,
+     157,   158,   159,   160,   164,   165,    88,    37,    57,    40,
+      42,    45,    48,    51,    53,     0,     0,     0,     0,    94,
+      95,    96,    62,    72,    97,    98,    99,   100,   101,   102,
+     103,   104,   105,   106,   107,   108,   109,     0,   110,   111,
+     112,   113,   114,   115,   116,   117,   118,   122,   119,   120,
+     121,   129,   125,   126,   136,    75,   137,   138,   145,   146,
+     147,   148,   149,   163,    80,    84,    93,    87
 };
 
 static const yytype_int8 yycheck[] =
 {
        3,     4,     5,     6,     7,     8,     9,    43,    34,    33,
-      36,    35,    36,    56,    57,    32,    33,    34,    35,    32,
-      33,    60,    58,    26,    27,    51,    60,    30,    31,    53,
-      47,    48,    49,    50,    47,    48,    36,    33,    54,    35,
-      56,    56,    58,    58,     0,    45,    46,    56,    56,    58,
-      58,    56,    33,    58,    56,    57,    60,    56,    57,    54,
-      55,    36,    65,    56,    57,    56,    57,    56,    57,    56,
-      57,    33,    60,    15,    60,    60,    60,    60,    60,    -1,
-      30,    -1,    -1,    -1,    64,    64,    64,    64,    64,    34,
-      64,    64,    64,    64,    64,    64,    64,    64,    64,    64,
-      64,    64,    50,    64,    64,    64,    64,    64,    54,    64,
-      64,    64,    64,    64,    58,    58,    54,    58,    58,    58,
-      37,    58,    58,    58,    58,    58,    58,    42,    -1,    45
+      36,    35,    36,    56,    57,    32,    33,    20,    32,    33,
+      34,    35,    58,    26,    27,    51,    60,    30,    31,    53,
+      47,    48,    36,    47,    48,    49,    50,    33,    33,    60,
+      35,    45,    46,    56,    54,    58,    56,    43,    58,    56,
+      56,    58,    58,     0,    56,    60,    58,    56,    57,    56,
+      57,    33,    65,    54,    55,    36,    56,    57,    56,    57,
+      56,    57,    56,    57,    56,    57,    33,    60,    16,    60,
+      60,    60,    60,    60,    60,    -1,    -1,    -1,    -1,    64,
+      64,    64,    32,    36,    64,    64,    64,    64,    64,    64,
+      64,    64,    64,    64,    64,    64,    64,    -1,    64,    64,
+      64,    64,    64,    64,    64,    64,    64,    54,    64,    64,
+      64,    54,    58,    58,    58,    39,    58,    58,    58,    58,
+      58,    58,    58,    58,    44,    47,    55,    50
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     5,     6,     7,     8,     9,    26,    27,
-      30,    31,    65,    67,    68,    69,    70,    71,    74,    75,
-      78,    80,    83,    85,    88,    91,    92,    95,    60,    72,
-      73,    60,    60,    76,    77,    60,    81,    82,    60,    84,
-      60,    86,    87,    60,    89,    90,    60,    79,    60,    93,
-      94,     0,    68,    32,    33,    47,    48,    72,    33,    32,
-      33,    34,    35,    47,    48,    49,    50,    76,    33,    35,
-      81,    36,    34,    36,    51,    86,    36,    45,    46,    89,
-      33,    33,    35,    36,    53,    93,    64,    64,    64,    64,
+       0,     3,     4,     5,     6,     7,     8,     9,    20,    26,
+      27,    30,    31,    65,    67,    68,    69,    70,    71,    74,
+      75,    78,    80,    83,    85,    88,    91,    92,    95,    98,
+      60,    72,    73,    60,    60,    76,    77,    60,    81,    82,
+      60,    84,    60,    86,    87,    60,    89,    90,    60,    96,
+      97,    60,    79,    60,    93,    94,     0,    68,    32,    33,
+      47,    48,    72,    33,    32,    33,    34,    35,    47,    48,
+      49,    50,    76,    33,    35,    81,    36,    34,    36,    51,
+      86,    36,    45,    46,    89,    33,    43,    96,    33,    33,
+      35,    36,    53,    93,    64,    64,    64,    64,    64,    64,
       64,    64,    64,    64,    64,    64,    64,    64,    64,    64,
       64,    64,    64,    64,    64,    64,    64,    64,    64,    64,
-      64,    64,    64,    54,    56,    57,    58,    58,    56,    57,
-      54,    56,    57,    43,    58,    56,    58,    58,    58,    58,
-      54,    55,    56,    57,    56,    58,    58,    58,    58,    58,
-      58,    56,    58,    54,    56,    58,    56,    57,    56,    57,
-      56,    58,    58,    56,    57
+      64,    64,    54,    56,    57,    58,    58,    56,    57,    54,
+      56,    57,    43,    58,    56,    58,    58,    58,    58,    54,
+      55,    56,    57,    56,    58,    58,    58,    58,    58,    58,
+      56,    58,    54,    56,    58,    56,    57,    56,    57,    56,
+      57,    56,    58,    58,    56,    57
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
        0,    66,    67,    68,    68,    69,    69,    69,    69,    69,
-      69,    69,    69,    69,    69,    69,    69,    70,    71,    72,
-      72,    73,    73,    73,    73,    73,    74,    74,    75,    76,
-      76,    77,    77,    77,    77,    77,    77,    77,    77,    77,
-      77,    77,    77,    78,    79,    79,    80,    81,    81,    82,
-      82,    82,    82,    83,    84,    85,    86,    86,    87,    87,
-      87,    88,    89,    89,    90,    90,    90,    90,    90,    90,
-      91,    92,    93,    93,    94,    94,    94,    94,    94,    94,
-      94,    95
+      69,    69,    69,    69,    69,    69,    69,    69,    70,    71,
+      72,    72,    73,    73,    73,    73,    73,    74,    74,    75,
+      76,    76,    77,    77,    77,    77,    77,    77,    77,    77,
+      77,    77,    77,    77,    78,    79,    79,    80,    81,    81,
+      82,    82,    82,    82,    83,    84,    85,    86,    86,    87,
+      87,    87,    88,    89,    89,    90,    90,    90,    90,    90,
+      90,    91,    92,    93,    93,    94,    94,    94,    94,    94,
+      94,    94,    95,    96,    96,    97,    97,    97,    98
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     2,     2,
-       1,     4,     4,     4,     4,     4,     5,     5,     2,     2,
-       1,     4,     4,     4,     4,     4,     4,     4,     4,     4,
-       4,     4,     4,     2,     4,     4,     2,     2,     1,     4,
-       4,     4,     4,     2,     4,     2,     2,     1,     4,     4,
-       4,     2,     2,     1,     4,     4,     4,     4,     4,     4,
-       1,     2,     2,     1,     4,     4,     4,     4,     4,     4,
-       4,     1
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     2,
+       2,     1,     4,     4,     4,     4,     4,     5,     5,     2,
+       2,     1,     4,     4,     4,     4,     4,     4,     4,     4,
+       4,     4,     4,     4,     2,     4,     4,     2,     2,     1,
+       4,     4,     4,     4,     2,     4,     2,     2,     1,     4,
+       4,     4,     2,     2,     1,     4,     4,     4,     4,     4,
+       4,     1,     2,     2,     1,     4,     4,     4,     4,     4,
+       4,     4,     2,     2,     1,     4,     4,     2,     1
 };
 
 
@@ -1662,445 +1674,475 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* INICIO: LISTACOMANDOS  */
-#line 126 "parser.y"
+#line 128 "parser.y"
                        {}
-#line 1668 "parser.cpp"
-    break;
-
-  case 3: /* LISTACOMANDOS: COMANDOS LISTACOMANDOS  */
-#line 129 "parser.y"
-                                       {}
-#line 1674 "parser.cpp"
-    break;
-
-  case 4: /* LISTACOMANDOS: COMANDOS  */
-#line 130 "parser.y"
-                           {}
 #line 1680 "parser.cpp"
     break;
 
-  case 5: /* COMANDOS: MKDISK  */
-#line 133 "parser.y"
-                 {}
+  case 3: /* LISTACOMANDOS: COMANDOS LISTACOMANDOS  */
+#line 131 "parser.y"
+                                       {}
 #line 1686 "parser.cpp"
     break;
 
-  case 6: /* COMANDOS: RMDISK  */
-#line 134 "parser.y"
-                 {}
+  case 4: /* LISTACOMANDOS: COMANDOS  */
+#line 132 "parser.y"
+                           {}
 #line 1692 "parser.cpp"
     break;
 
-  case 7: /* COMANDOS: FDISK  */
+  case 5: /* COMANDOS: MKDISK  */
 #line 135 "parser.y"
-                {}
+                 {}
 #line 1698 "parser.cpp"
     break;
 
-  case 8: /* COMANDOS: EXEC  */
+  case 6: /* COMANDOS: RMDISK  */
 #line 136 "parser.y"
-               {}
+                 {}
 #line 1704 "parser.cpp"
     break;
 
-  case 9: /* COMANDOS: MOUNT  */
+  case 7: /* COMANDOS: FDISK  */
 #line 137 "parser.y"
                 {}
 #line 1710 "parser.cpp"
     break;
 
-  case 10: /* COMANDOS: UNMOUNT  */
+  case 8: /* COMANDOS: EXEC  */
 #line 138 "parser.y"
-                  {}
+               {}
 #line 1716 "parser.cpp"
     break;
 
-  case 11: /* COMANDOS: MKFS  */
+  case 9: /* COMANDOS: MOUNT  */
 #line 139 "parser.y"
-               {}
+                {}
 #line 1722 "parser.cpp"
     break;
 
-  case 12: /* COMANDOS: LOGIN  */
+  case 10: /* COMANDOS: UNMOUNT  */
 #line 140 "parser.y"
-                {}
+                  {}
 #line 1728 "parser.cpp"
     break;
 
-  case 13: /* COMANDOS: LOGOUT  */
+  case 11: /* COMANDOS: MKFS  */
 #line 141 "parser.y"
-                 {}
+               {}
 #line 1734 "parser.cpp"
     break;
 
-  case 14: /* COMANDOS: REP  */
+  case 12: /* COMANDOS: LOGIN  */
 #line 142 "parser.y"
-              {}
+                {}
 #line 1740 "parser.cpp"
     break;
 
-  case 15: /* COMANDOS: PAUSE  */
+  case 13: /* COMANDOS: LOGOUT  */
 #line 143 "parser.y"
-                {}
+                 {}
 #line 1746 "parser.cpp"
     break;
 
-  case 16: /* COMANDOS: COMENTARIO  */
+  case 14: /* COMANDOS: REP  */
 #line 144 "parser.y"
-                     {}
+              {}
 #line 1752 "parser.cpp"
     break;
 
-  case 18: /* MKDISK: tk_mkdisk LP_MKDISK  */
-#line 149 "parser.y"
-                            {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
+  case 15: /* COMANDOS: PAUSE  */
+#line 145 "parser.y"
+                {}
 #line 1758 "parser.cpp"
     break;
 
-  case 19: /* LP_MKDISK: P_MKDISK LP_MKDISK  */
-#line 152 "parser.y"
-                               {}
+  case 16: /* COMANDOS: MKDIR  */
+#line 146 "parser.y"
+                {}
 #line 1764 "parser.cpp"
     break;
 
-  case 20: /* LP_MKDISK: P_MKDISK  */
-#line 153 "parser.y"
-                   {}
+  case 17: /* COMANDOS: COMENTARIO  */
+#line 147 "parser.y"
+                     {}
 #line 1770 "parser.cpp"
     break;
 
-  case 21: /* P_MKDISK: tk_menos tk_size tk_igual tk_entero  */
-#line 156 "parser.y"
-                                                {p_mkdisk[0] = (yyvsp[0].TEXT);}
+  case 19: /* MKDISK: tk_mkdisk LP_MKDISK  */
+#line 152 "parser.y"
+                            {mkdisk disco; disco.crearDisco(p_mkdisk); for (int i=0; i < 4; i++)p_mkdisk[i].clear();}
 #line 1776 "parser.cpp"
     break;
 
-  case 22: /* P_MKDISK: tk_menos tk_path tk_igual tk_eruta  */
-#line 157 "parser.y"
-                                         {p_mkdisk[1] = (yyvsp[0].TEXT);}
+  case 20: /* LP_MKDISK: P_MKDISK LP_MKDISK  */
+#line 155 "parser.y"
+                               {}
 #line 1782 "parser.cpp"
     break;
 
-  case 23: /* P_MKDISK: tk_menos tk_path tk_igual tk_cadena  */
-#line 158 "parser.y"
-                                          {p_mkdisk[1] = (yyvsp[0].TEXT);}
+  case 21: /* LP_MKDISK: P_MKDISK  */
+#line 156 "parser.y"
+                   {}
 #line 1788 "parser.cpp"
     break;
 
-  case 24: /* P_MKDISK: tk_menos tk_f tk_igual tk_identificador  */
+  case 22: /* P_MKDISK: tk_menos tk_size tk_igual tk_entero  */
 #line 159 "parser.y"
-                                              {p_mkdisk[2]= (yyvsp[0].TEXT);}
+                                                {p_mkdisk[0] = (yyvsp[0].TEXT);}
 #line 1794 "parser.cpp"
     break;
 
-  case 25: /* P_MKDISK: tk_menos tk_u tk_igual tk_identificador  */
+  case 23: /* P_MKDISK: tk_menos tk_path tk_igual tk_eruta  */
 #line 160 "parser.y"
-                                              {p_mkdisk[3] = (yyvsp[0].TEXT);}
+                                         {p_mkdisk[1] = (yyvsp[0].TEXT);}
 #line 1800 "parser.cpp"
     break;
 
-  case 26: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta  */
-#line 163 "parser.y"
-                                                     {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
+  case 24: /* P_MKDISK: tk_menos tk_path tk_igual tk_cadena  */
+#line 161 "parser.y"
+                                          {p_mkdisk[1] = (yyvsp[0].TEXT);}
 #line 1806 "parser.cpp"
     break;
 
-  case 27: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_cadena  */
-#line 164 "parser.y"
-                                                    {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
+  case 25: /* P_MKDISK: tk_menos tk_f tk_igual tk_identificador  */
+#line 162 "parser.y"
+                                              {p_mkdisk[2]= (yyvsp[0].TEXT);}
 #line 1812 "parser.cpp"
     break;
 
-  case 28: /* FDISK: tk_fdisk LP_FDISK  */
-#line 167 "parser.y"
-                         {fdisk fdisk(p_fdisk);  fdisk.ejecutarFdisk(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
+  case 26: /* P_MKDISK: tk_menos tk_u tk_igual tk_identificador  */
+#line 163 "parser.y"
+                                              {p_mkdisk[3] = (yyvsp[0].TEXT);}
 #line 1818 "parser.cpp"
     break;
 
-  case 29: /* LP_FDISK: P_FDISK LP_FDISK  */
-#line 170 "parser.y"
-                           {}
+  case 27: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_eruta  */
+#line 166 "parser.y"
+                                                     {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
 #line 1824 "parser.cpp"
     break;
 
-  case 30: /* LP_FDISK: P_FDISK  */
-#line 171 "parser.y"
-                  {}
+  case 28: /* RMDISK: tk_rmdisk tk_menos tk_path tk_igual tk_cadena  */
+#line 167 "parser.y"
+                                                    {rmdisk disco2; disco2.eliminarDisco((yyvsp[0].TEXT));}
 #line 1830 "parser.cpp"
     break;
 
-  case 31: /* P_FDISK: tk_menos tk_size tk_igual tk_entero  */
-#line 174 "parser.y"
-                                             {p_fdisk[0]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "size";}}
+  case 29: /* FDISK: tk_fdisk LP_FDISK  */
+#line 170 "parser.y"
+                         {fdisk fdisk(p_fdisk);  fdisk.ejecutarFdisk(); for (int i=0; i < 9; i++){p_fdisk[i].clear();} pPrimero = true;}
 #line 1836 "parser.cpp"
     break;
 
-  case 32: /* P_FDISK: tk_menos tk_path tk_igual tk_eruta  */
-#line 176 "parser.y"
-                                             {p_fdisk[2]=(yyvsp[0].TEXT);}
+  case 30: /* LP_FDISK: P_FDISK LP_FDISK  */
+#line 173 "parser.y"
+                           {}
 #line 1842 "parser.cpp"
     break;
 
-  case 33: /* P_FDISK: tk_menos tk_path tk_igual tk_cadena  */
-#line 177 "parser.y"
-                                              {p_fdisk[2]=(yyvsp[0].TEXT);}
+  case 31: /* LP_FDISK: P_FDISK  */
+#line 174 "parser.y"
+                  {}
 #line 1848 "parser.cpp"
     break;
 
-  case 34: /* P_FDISK: tk_menos tk_name tk_igual tk_identificador  */
-#line 179 "parser.y"
-                                                     {p_fdisk[6]=(yyvsp[0].TEXT);}
+  case 32: /* P_FDISK: tk_menos tk_size tk_igual tk_entero  */
+#line 177 "parser.y"
+                                             {p_fdisk[0]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "size";}}
 #line 1854 "parser.cpp"
     break;
 
-  case 35: /* P_FDISK: tk_menos tk_name tk_igual tk_cadena  */
-#line 180 "parser.y"
-                                              {p_fdisk[6]=(yyvsp[0].TEXT);}
+  case 33: /* P_FDISK: tk_menos tk_path tk_igual tk_eruta  */
+#line 179 "parser.y"
+                                             {p_fdisk[2]=(yyvsp[0].TEXT);}
 #line 1860 "parser.cpp"
     break;
 
-  case 36: /* P_FDISK: tk_menos tk_u tk_igual tk_identificador  */
-#line 182 "parser.y"
-                                                  {p_fdisk[1]=(yyvsp[0].TEXT);}
+  case 34: /* P_FDISK: tk_menos tk_path tk_igual tk_cadena  */
+#line 180 "parser.y"
+                                              {p_fdisk[2]=(yyvsp[0].TEXT);}
 #line 1866 "parser.cpp"
     break;
 
-  case 37: /* P_FDISK: tk_menos tk_type tk_igual tk_identificador  */
-#line 183 "parser.y"
-                                                     {p_fdisk[3]=(yyvsp[0].TEXT);}
+  case 35: /* P_FDISK: tk_menos tk_name tk_igual tk_identificador  */
+#line 182 "parser.y"
+                                                     {p_fdisk[6]=(yyvsp[0].TEXT);}
 #line 1872 "parser.cpp"
     break;
 
-  case 38: /* P_FDISK: tk_menos tk_type tk_igual tk_p  */
-#line 184 "parser.y"
-                                         {p_fdisk[3]=(yyvsp[0].TEXT);}
+  case 36: /* P_FDISK: tk_menos tk_name tk_igual tk_cadena  */
+#line 183 "parser.y"
+                                              {p_fdisk[6]=(yyvsp[0].TEXT);}
 #line 1878 "parser.cpp"
     break;
 
-  case 39: /* P_FDISK: tk_menos tk_f tk_igual tk_identificador  */
+  case 37: /* P_FDISK: tk_menos tk_u tk_igual tk_identificador  */
 #line 185 "parser.y"
-                                                  {p_fdisk[4]=(yyvsp[0].TEXT);}
+                                                  {p_fdisk[1]=(yyvsp[0].TEXT);}
 #line 1884 "parser.cpp"
     break;
 
-  case 40: /* P_FDISK: tk_menos tk_delete tk_igual tk_identificador  */
-#line 187 "parser.y"
-                                                       {p_fdisk[5]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
+  case 38: /* P_FDISK: tk_menos tk_type tk_igual tk_identificador  */
+#line 186 "parser.y"
+                                                     {p_fdisk[3]=(yyvsp[0].TEXT);}
 #line 1890 "parser.cpp"
     break;
 
-  case 41: /* P_FDISK: tk_menos tk_add tk_igual tk_entero  */
-#line 189 "parser.y"
-                                             {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+  case 39: /* P_FDISK: tk_menos tk_type tk_igual tk_p  */
+#line 187 "parser.y"
+                                         {p_fdisk[3]=(yyvsp[0].TEXT);}
 #line 1896 "parser.cpp"
     break;
 
-  case 42: /* P_FDISK: tk_menos tk_add tk_igual tk_negativo  */
-#line 190 "parser.y"
-                                               {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
+  case 40: /* P_FDISK: tk_menos tk_f tk_igual tk_identificador  */
+#line 188 "parser.y"
+                                                  {p_fdisk[4]=(yyvsp[0].TEXT);}
 #line 1902 "parser.cpp"
     break;
 
-  case 43: /* EXEC: tk_exec P_EXEC  */
-#line 193 "parser.y"
-                     {exec exec(p_exec); exec.ejecutar(); p_exec[0].clear();}
+  case 41: /* P_FDISK: tk_menos tk_delete tk_igual tk_identificador  */
+#line 190 "parser.y"
+                                                       {p_fdisk[5]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "delete";}}
 #line 1908 "parser.cpp"
     break;
 
-  case 44: /* P_EXEC: tk_menos tk_path tk_igual tk_cadena  */
-#line 196 "parser.y"
-                                            {p_exec[0] = (yyvsp[0].TEXT);}
+  case 42: /* P_FDISK: tk_menos tk_add tk_igual tk_entero  */
+#line 192 "parser.y"
+                                             {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
 #line 1914 "parser.cpp"
     break;
 
-  case 45: /* P_EXEC: tk_menos tk_path tk_igual tk_eruta  */
-#line 197 "parser.y"
-                                             {p_exec[0] = (yyvsp[0].TEXT);}
+  case 43: /* P_FDISK: tk_menos tk_add tk_igual tk_negativo  */
+#line 193 "parser.y"
+                                               {p_fdisk[7]=(yyvsp[0].TEXT); if(pPrimero){pPrimero = false; p_fdisk[8] = "add";}}
 #line 1920 "parser.cpp"
     break;
 
-  case 46: /* MOUNT: tk_mount LP_MOUNT  */
-#line 200 "parser.y"
-                         {mount mount(p_mount); mount.ejecutar(); p_mount[0].clear(); p_mount[1].clear();}
+  case 44: /* EXEC: tk_exec P_EXEC  */
+#line 196 "parser.y"
+                     {exec exec(p_exec); exec.ejecutar(); p_exec[0].clear();}
 #line 1926 "parser.cpp"
     break;
 
-  case 47: /* LP_MOUNT: P_MOUNT LP_MOUNT  */
-#line 203 "parser.y"
-                           {}
+  case 45: /* P_EXEC: tk_menos tk_path tk_igual tk_cadena  */
+#line 199 "parser.y"
+                                            {p_exec[0] = (yyvsp[0].TEXT);}
 #line 1932 "parser.cpp"
     break;
 
-  case 48: /* LP_MOUNT: P_MOUNT  */
-#line 204 "parser.y"
-                  {}
+  case 46: /* P_EXEC: tk_menos tk_path tk_igual tk_eruta  */
+#line 200 "parser.y"
+                                             {p_exec[0] = (yyvsp[0].TEXT);}
 #line 1938 "parser.cpp"
     break;
 
-  case 49: /* P_MOUNT: tk_menos tk_path tk_igual tk_cadena  */
-#line 206 "parser.y"
-                                             {p_mount[0] = (yyvsp[0].TEXT);}
+  case 47: /* MOUNT: tk_mount LP_MOUNT  */
+#line 203 "parser.y"
+                         {mount mount(p_mount); mount.ejecutar(); p_mount[0].clear(); p_mount[1].clear();}
 #line 1944 "parser.cpp"
     break;
 
-  case 50: /* P_MOUNT: tk_menos tk_path tk_igual tk_eruta  */
-#line 207 "parser.y"
-                                             {p_mount[0] = (yyvsp[0].TEXT);}
+  case 48: /* LP_MOUNT: P_MOUNT LP_MOUNT  */
+#line 206 "parser.y"
+                           {}
 #line 1950 "parser.cpp"
     break;
 
-  case 51: /* P_MOUNT: tk_menos tk_name tk_igual tk_identificador  */
-#line 208 "parser.y"
-                                                     {p_mount[1] = (yyvsp[0].TEXT);}
+  case 49: /* LP_MOUNT: P_MOUNT  */
+#line 207 "parser.y"
+                  {}
 #line 1956 "parser.cpp"
     break;
 
-  case 52: /* P_MOUNT: tk_menos tk_name tk_igual tk_cadena  */
+  case 50: /* P_MOUNT: tk_menos tk_path tk_igual tk_cadena  */
 #line 209 "parser.y"
-                                              {p_mount[1] = (yyvsp[0].TEXT);}
+                                             {p_mount[0] = (yyvsp[0].TEXT);}
 #line 1962 "parser.cpp"
     break;
 
-  case 53: /* UNMOUNT: tk_unmount P_UNMOUNT  */
-#line 213 "parser.y"
-                              {unmount unmount(p_unmount); unmount.ejecutar(); p_unmount[0].clear();}
+  case 51: /* P_MOUNT: tk_menos tk_path tk_igual tk_eruta  */
+#line 210 "parser.y"
+                                             {p_mount[0] = (yyvsp[0].TEXT);}
 #line 1968 "parser.cpp"
     break;
 
-  case 54: /* P_UNMOUNT: tk_menos tk_id tk_igual tk_identificador  */
-#line 216 "parser.y"
-                                                    {p_unmount[0] = (yyvsp[0].TEXT);}
+  case 52: /* P_MOUNT: tk_menos tk_name tk_igual tk_identificador  */
+#line 211 "parser.y"
+                                                     {p_mount[1] = (yyvsp[0].TEXT);}
 #line 1974 "parser.cpp"
     break;
 
-  case 55: /* MKFS: tk_mkfs LP_MKFS  */
-#line 219 "parser.y"
-                      {mkfs mkfs(p_mkfs); mkfs.ejecutar(); for(int i=0; i < 3; i++){p_mkfs[i].clear();}}
+  case 53: /* P_MOUNT: tk_menos tk_name tk_igual tk_cadena  */
+#line 212 "parser.y"
+                                              {p_mount[1] = (yyvsp[0].TEXT);}
 #line 1980 "parser.cpp"
     break;
 
-  case 58: /* P_MKFS: tk_menos tk_id tk_igual tk_identificador  */
-#line 226 "parser.y"
-                                                 {p_mkfs[0] = (yyvsp[0].TEXT);}
+  case 54: /* UNMOUNT: tk_unmount P_UNMOUNT  */
+#line 216 "parser.y"
+                              {unmount unmount(p_unmount); unmount.ejecutar(); p_unmount[0].clear();}
 #line 1986 "parser.cpp"
     break;
 
-  case 59: /* P_MKFS: tk_menos tk_type tk_igual tk_identificador  */
-#line 227 "parser.y"
-                                                     {p_mkfs[1] = (yyvsp[0].TEXT);}
+  case 55: /* P_UNMOUNT: tk_menos tk_id tk_igual tk_identificador  */
+#line 219 "parser.y"
+                                                    {p_unmount[0] = (yyvsp[0].TEXT);}
 #line 1992 "parser.cpp"
     break;
 
-  case 60: /* P_MKFS: tk_menos tk_fs tk_igual tk_identificador  */
-#line 228 "parser.y"
-                                                   {p_mkfs[2] = (yyvsp[0].TEXT);}
+  case 56: /* MKFS: tk_mkfs LP_MKFS  */
+#line 222 "parser.y"
+                      {mkfs mkfs(p_mkfs); mkfs.ejecutar(); for(int i=0; i < 3; i++){p_mkfs[i].clear();}}
 #line 1998 "parser.cpp"
     break;
 
-  case 61: /* LOGIN: tk_login LP_LOGIN  */
-#line 231 "parser.y"
-                         {login login(p_login); login.ejecutar(); for(int i=0; i < 3; i++){p_login[i].clear();}}
+  case 59: /* P_MKFS: tk_menos tk_id tk_igual tk_identificador  */
+#line 229 "parser.y"
+                                                 {p_mkfs[0] = (yyvsp[0].TEXT);}
 #line 2004 "parser.cpp"
     break;
 
-  case 64: /* P_LOGIN: tk_menos tk_usuario tk_igual tk_identificador  */
-#line 238 "parser.y"
-                                                       {p_login[0] = (yyvsp[0].TEXT);}
+  case 60: /* P_MKFS: tk_menos tk_type tk_igual tk_identificador  */
+#line 230 "parser.y"
+                                                     {p_mkfs[1] = (yyvsp[0].TEXT);}
 #line 2010 "parser.cpp"
     break;
 
-  case 65: /* P_LOGIN: tk_menos tk_usuario tk_igual tk_cadena  */
-#line 239 "parser.y"
-                                                 {p_login[0] = (yyvsp[0].TEXT);}
+  case 61: /* P_MKFS: tk_menos tk_fs tk_igual tk_identificador  */
+#line 231 "parser.y"
+                                                   {p_mkfs[2] = (yyvsp[0].TEXT);}
 #line 2016 "parser.cpp"
     break;
 
-  case 66: /* P_LOGIN: tk_menos tk_password tk_igual tk_identificador  */
-#line 241 "parser.y"
-                                                        {p_login[1] = (yyvsp[0].TEXT);}
+  case 62: /* LOGIN: tk_login LP_LOGIN  */
+#line 234 "parser.y"
+                         {login login(p_login); login.ejecutar(); for(int i=0; i < 3; i++){p_login[i].clear();}}
 #line 2022 "parser.cpp"
     break;
 
-  case 67: /* P_LOGIN: tk_menos tk_password tk_igual tk_cadena  */
-#line 242 "parser.y"
-                                                 {p_login[1] = (yyvsp[0].TEXT);}
+  case 65: /* P_LOGIN: tk_menos tk_usuario tk_igual tk_identificador  */
+#line 241 "parser.y"
+                                                       {p_login[0] = (yyvsp[0].TEXT);}
 #line 2028 "parser.cpp"
     break;
 
-  case 68: /* P_LOGIN: tk_menos tk_password tk_igual tk_entero  */
-#line 243 "parser.y"
-                                                 {p_login[1] = (yyvsp[0].TEXT);}
+  case 66: /* P_LOGIN: tk_menos tk_usuario tk_igual tk_cadena  */
+#line 242 "parser.y"
+                                                 {p_login[0] = (yyvsp[0].TEXT);}
 #line 2034 "parser.cpp"
     break;
 
-  case 69: /* P_LOGIN: tk_menos tk_id tk_igual tk_identificador  */
-#line 245 "parser.y"
-                                                  {p_login[2] = (yyvsp[0].TEXT);}
+  case 67: /* P_LOGIN: tk_menos tk_password tk_igual tk_identificador  */
+#line 244 "parser.y"
+                                                        {p_login[1] = (yyvsp[0].TEXT);}
 #line 2040 "parser.cpp"
     break;
 
-  case 70: /* LOGOUT: tk_logout  */
-#line 248 "parser.y"
-                  {logout logout; logout.ejecutar();}
+  case 68: /* P_LOGIN: tk_menos tk_password tk_igual tk_cadena  */
+#line 245 "parser.y"
+                                                 {p_login[1] = (yyvsp[0].TEXT);}
 #line 2046 "parser.cpp"
     break;
 
-  case 71: /* REP: tk_rep LP_REP  */
-#line 251 "parser.y"
-                   {rep rep(p_rep); rep.ejecutar(); for(int i=0; i < 4; i++){p_rep[i].clear();}}
+  case 69: /* P_LOGIN: tk_menos tk_password tk_igual tk_entero  */
+#line 246 "parser.y"
+                                                 {p_login[1] = (yyvsp[0].TEXT);}
 #line 2052 "parser.cpp"
     break;
 
-  case 74: /* P_REP: tk_menos tk_name tk_igual tk_cadena  */
-#line 258 "parser.y"
-                                           {p_rep[0] = (yyvsp[0].TEXT);}
+  case 70: /* P_LOGIN: tk_menos tk_id tk_igual tk_identificador  */
+#line 248 "parser.y"
+                                                  {p_login[2] = (yyvsp[0].TEXT);}
 #line 2058 "parser.cpp"
     break;
 
-  case 75: /* P_REP: tk_menos tk_name tk_igual tk_identificador  */
-#line 259 "parser.y"
-                                                  {p_rep[0] = (yyvsp[0].TEXT);}
+  case 71: /* LOGOUT: tk_logout  */
+#line 251 "parser.y"
+                  {logout logout; logout.ejecutar();}
 #line 2064 "parser.cpp"
     break;
 
-  case 76: /* P_REP: tk_menos tk_path tk_igual tk_eruta  */
-#line 261 "parser.y"
-                                          {p_rep[1] = (yyvsp[0].TEXT);}
+  case 72: /* REP: tk_rep LP_REP  */
+#line 254 "parser.y"
+                   {rep rep(p_rep); rep.ejecutar(); for(int i=0; i < 4; i++){p_rep[i].clear();}}
 #line 2070 "parser.cpp"
     break;
 
-  case 77: /* P_REP: tk_menos tk_path tk_igual tk_cadena  */
-#line 262 "parser.y"
-                                           {p_rep[1] = (yyvsp[0].TEXT);}
+  case 75: /* P_REP: tk_menos tk_name tk_igual tk_cadena  */
+#line 261 "parser.y"
+                                           {p_rep[0] = (yyvsp[0].TEXT);}
 #line 2076 "parser.cpp"
     break;
 
-  case 78: /* P_REP: tk_menos tk_id tk_igual tk_identificador  */
-#line 265 "parser.y"
-                                                {p_rep[2] = (yyvsp[0].TEXT);}
+  case 76: /* P_REP: tk_menos tk_name tk_igual tk_identificador  */
+#line 262 "parser.y"
+                                                  {p_rep[0] = (yyvsp[0].TEXT);}
 #line 2082 "parser.cpp"
     break;
 
-  case 79: /* P_REP: tk_menos tk_ruta tk_igual tk_eruta  */
-#line 267 "parser.y"
-                                          {p_rep[3] = (yyvsp[0].TEXT);}
+  case 77: /* P_REP: tk_menos tk_path tk_igual tk_eruta  */
+#line 264 "parser.y"
+                                          {p_rep[1] = (yyvsp[0].TEXT);}
 #line 2088 "parser.cpp"
     break;
 
-  case 80: /* P_REP: tk_menos tk_ruta tk_igual tk_cadena  */
-#line 268 "parser.y"
-                                           {p_rep[3] = (yyvsp[0].TEXT);}
+  case 78: /* P_REP: tk_menos tk_path tk_igual tk_cadena  */
+#line 265 "parser.y"
+                                           {p_rep[1] = (yyvsp[0].TEXT);}
 #line 2094 "parser.cpp"
     break;
 
-  case 81: /* PAUSE: tk_pause  */
-#line 272 "parser.y"
-                {pausa pausa;}
+  case 79: /* P_REP: tk_menos tk_id tk_igual tk_identificador  */
+#line 268 "parser.y"
+                                                {p_rep[2] = (yyvsp[0].TEXT);}
 #line 2100 "parser.cpp"
     break;
 
+  case 80: /* P_REP: tk_menos tk_ruta tk_igual tk_eruta  */
+#line 270 "parser.y"
+                                          {p_rep[3] = (yyvsp[0].TEXT);}
+#line 2106 "parser.cpp"
+    break;
 
-#line 2104 "parser.cpp"
+  case 81: /* P_REP: tk_menos tk_ruta tk_igual tk_cadena  */
+#line 271 "parser.y"
+                                           {p_rep[3] = (yyvsp[0].TEXT);}
+#line 2112 "parser.cpp"
+    break;
+
+  case 82: /* MKDIR: tk_mkdir LP_MKDIR  */
+#line 275 "parser.y"
+                         {mkdirc mkdirc(p_mkdir); mkdirc.ejecutar(); p_mkdir[0].clear(); p_mkdir[1].clear();}
+#line 2118 "parser.cpp"
+    break;
+
+  case 85: /* P_MKDIR: tk_menos tk_path tk_igual tk_eruta  */
+#line 282 "parser.y"
+                                            {p_mkdir[0] = (yyvsp[0].TEXT);}
+#line 2124 "parser.cpp"
+    break;
+
+  case 86: /* P_MKDIR: tk_menos tk_path tk_igual tk_cadena  */
+#line 283 "parser.y"
+                                              {p_mkdir[0] = (yyvsp[0].TEXT);}
+#line 2130 "parser.cpp"
+    break;
+
+  case 87: /* P_MKDIR: tk_menos tk_p  */
+#line 284 "parser.y"
+                        {p_mkdir[1] = (yyvsp[0].TEXT);}
+#line 2136 "parser.cpp"
+    break;
+
+  case 88: /* PAUSE: tk_pause  */
+#line 287 "parser.y"
+                {pausa pausa;}
+#line 2142 "parser.cpp"
+    break;
+
+
+#line 2146 "parser.cpp"
 
       default: break;
     }

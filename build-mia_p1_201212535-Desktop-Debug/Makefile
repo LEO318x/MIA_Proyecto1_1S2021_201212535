@@ -57,6 +57,7 @@ SOURCES       = ../mia_p1_201212535/clases/exec.cpp \
 		../mia_p1_201212535/clases/funciones.cpp \
 		../mia_p1_201212535/clases/login.cpp \
 		../mia_p1_201212535/clases/logout.cpp \
+		../mia_p1_201212535/clases/mkdirc.cpp \
 		../mia_p1_201212535/clases/mkdisk.cpp \
 		../mia_p1_201212535/clases/mkfs.cpp \
 		../mia_p1_201212535/clases/mount.cpp \
@@ -72,6 +73,7 @@ OBJECTS       = exec.o \
 		funciones.o \
 		login.o \
 		logout.o \
+		mkdirc.o \
 		mkdisk.o \
 		mkfs.o \
 		mount.o \
@@ -165,6 +167,7 @@ DIST          = ../mia_p1_201212535/lexico.l \
 		../mia_p1_201212535/clases/funciones.h \
 		../mia_p1_201212535/clases/login.h \
 		../mia_p1_201212535/clases/logout.h \
+		../mia_p1_201212535/clases/mkdirc.h \
 		../mia_p1_201212535/clases/mkdisk.h \
 		../mia_p1_201212535/clases/mkfs.h \
 		../mia_p1_201212535/clases/mount.h \
@@ -178,6 +181,7 @@ DIST          = ../mia_p1_201212535/lexico.l \
 		../mia_p1_201212535/clases/funciones.cpp \
 		../mia_p1_201212535/clases/login.cpp \
 		../mia_p1_201212535/clases/logout.cpp \
+		../mia_p1_201212535/clases/mkdirc.cpp \
 		../mia_p1_201212535/clases/mkdisk.cpp \
 		../mia_p1_201212535/clases/mkfs.cpp \
 		../mia_p1_201212535/clases/mount.cpp \
@@ -369,8 +373,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.h ../mia_p1_201212535/clases/fdisk.h ../mia_p1_201212535/clases/funciones.h ../mia_p1_201212535/clases/login.h ../mia_p1_201212535/clases/logout.h ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/clases/mkfs.h ../mia_p1_201212535/clases/mount.h ../mia_p1_201212535/clases/pausa.h ../mia_p1_201212535/clases/rep.h ../mia_p1_201212535/clases/rmdisk.h ../mia_p1_201212535/clases/unmount.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.cpp ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/login.cpp ../mia_p1_201212535/clases/logout.cpp ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkfs.cpp ../mia_p1_201212535/clases/mount.cpp ../mia_p1_201212535/clases/pausa.cpp ../mia_p1_201212535/clases/rep.cpp ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/unmount.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.h ../mia_p1_201212535/clases/fdisk.h ../mia_p1_201212535/clases/funciones.h ../mia_p1_201212535/clases/login.h ../mia_p1_201212535/clases/logout.h ../mia_p1_201212535/clases/mkdirc.h ../mia_p1_201212535/clases/mkdisk.h ../mia_p1_201212535/clases/mkfs.h ../mia_p1_201212535/clases/mount.h ../mia_p1_201212535/clases/pausa.h ../mia_p1_201212535/clases/rep.h ../mia_p1_201212535/clases/rmdisk.h ../mia_p1_201212535/clases/unmount.h ../mia_p1_201212535/parser.h ../mia_p1_201212535/scanner.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../mia_p1_201212535/clases/exec.cpp ../mia_p1_201212535/clases/fdisk.cpp ../mia_p1_201212535/clases/funciones.cpp ../mia_p1_201212535/clases/login.cpp ../mia_p1_201212535/clases/logout.cpp ../mia_p1_201212535/clases/mkdirc.cpp ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkfs.cpp ../mia_p1_201212535/clases/mount.cpp ../mia_p1_201212535/clases/pausa.cpp ../mia_p1_201212535/clases/rep.cpp ../mia_p1_201212535/clases/rmdisk.cpp ../mia_p1_201212535/clases/unmount.cpp ../mia_p1_201212535/main.cpp ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -444,6 +448,11 @@ logout.o: ../mia_p1_201212535/clases/logout.cpp ../mia_p1_201212535/clases/logou
 		../mia_p1_201212535/clases/estructuras.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o logout.o ../mia_p1_201212535/clases/logout.cpp
 
+mkdirc.o: ../mia_p1_201212535/clases/mkdirc.cpp ../mia_p1_201212535/clases/mkdirc.h \
+		../mia_p1_201212535/clases/funciones.h \
+		../mia_p1_201212535/clases/estructuras.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mkdirc.o ../mia_p1_201212535/clases/mkdirc.cpp
+
 mkdisk.o: ../mia_p1_201212535/clases/mkdisk.cpp ../mia_p1_201212535/clases/mkdisk.h \
 		../mia_p1_201212535/clases/funciones.h \
 		../mia_p1_201212535/clases/estructuras.h
@@ -498,7 +507,8 @@ parser.o: ../mia_p1_201212535/parser.cpp ../mia_p1_201212535/scanner.h \
 		../mia_p1_201212535/clases/login.h \
 		../mia_p1_201212535/clases/logout.h \
 		../mia_p1_201212535/clases/rep.h \
-		../mia_p1_201212535/clases/pausa.h
+		../mia_p1_201212535/clases/pausa.h \
+		../mia_p1_201212535/clases/mkdirc.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../mia_p1_201212535/parser.cpp
 
 scanner.o: ../mia_p1_201212535/scanner.cpp ../mia_p1_201212535/parser.h

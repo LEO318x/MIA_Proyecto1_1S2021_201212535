@@ -28,6 +28,13 @@ void rep::ejecutar(){
             reporteSb();
         }else if(toLower(this->name)== "disk"){
             reporteDisk();
+        }else if(toLower(this->name) == "inode"){
+            reporteInodo();
+        }else if(toLower(this->name) == "journaling"){
+            reporteJournaling();
+        }else if(toLower(this->name) == "tree"){
+            //reporteTree();
+            crearReporte(obtenerInodosRec(0));
         }
         
     }
@@ -223,7 +230,114 @@ void rep::reporteDisk(){
 
 }
 
+void rep::reporteInodo(){
+    if(!verificarParticionID(this->id)){
+        cout << "ERROR: No existe la partición o disco" << endl;
+        return;
+    }
+    string bmInodos = obtenerBitmapInodos(this->id);
+    superbloque sb = obtenerSuperBloque(obtenerParticionID(this->id), this->id);
+    int startInodo = sb.s_inode_start;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    inodo ind;
+    string textoRep;
+    string apuntAux;
+    int auxC = 0;
+    string nombre = extraerNombreArchivo(obtenerRutaID(this->id));
+    
+    if(disco != NULL){
+        for(int i=0; i < bmInodos.size(); i++){
+            if(bmInodos[i] != '0'){
+                fseek(disco, obtenerPosicionInodo(startInodo, i), SEEK_SET);
+                fread(&ind, sizeof(inodo), 1, disco);
+                //cout << ind.i_type << endl;
+                textoRep += "Inodo"+to_string(i)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+                textoRep += "<tr><td>" + nombre +"</td><td>Inodo "+to_string(i)+"</td></tr>";
+                textoRep += "<tr><td>Nombre</td><td>Valor</td></tr>\n";
+                textoRep += "<tr><td>i_uid</td><td>"+ to_string(ind.i_uid) +"</td></tr>\n";
+                textoRep += "<tr><td>i_gid</td><td>"+ to_string(ind.i_gid) +"</td></tr>\n";
+                textoRep += "<tr><td>i_size</td><td>"+ to_string(ind.i_size) +"</td></tr>\n";
+                textoRep += "<tr><td>i_atime</td><td>"+ string(ind.i_atime) +"</td></tr>\n";
+                textoRep += "<tr><td>i_ctime</td><td>"+ string(ind.i_ctime) +"</td></tr>\n";
+                textoRep += "<tr><td>i_mtime</td><td>"+ string(ind.i_mtime) +"</td></tr>\n";
+                for(int j = 0; j < 15; j++){
+                    textoRep += "<tr><td>APT"+to_string(j)+"</td><td>"+ to_string(ind.i_block[j]) +"</td></tr>\n";
+                }
+                textoRep += "<tr><td>i_type</td><td>"+ to_string(ind.i_type) +"</td></tr>\n";
+                textoRep += "<tr><td>i_perm</td><td>"+ to_string(ind.i_perm) +"</td></tr>\n";
+                textoRep += "</table>>];";
 
+                if(auxC == 0){
+                    apuntAux += "Inodo"+to_string(i); 
+                    auxC++;
+                }else{
+                    apuntAux += "->Inodo"+to_string(i); 
+                }
+            }            
+        }
+                  
+        fclose(disco);
+        textoRep += apuntAux+";";
+        crearReporte(textoRep);
+    }
+}
+
+void rep::reporteJournaling(){
+    if(!verificarParticionID(this->id)){
+        cout << "ERROR: No existe la partición o disco" << endl;
+        return;
+    }
+    Partition part = obtenerParticionID(this->id);
+    superbloque sb = obtenerSuperBloque(part, this->id);
+    
+
+    int inicioPart = part.part_start;
+    int tamSb = sizeof(superbloque);
+
+    journal jl;
+
+    if(sb.s_filesystem_type == 3){
+        FILE *disco;
+        disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+        if(disco != NULL){
+            fseek(disco, inicioPart+tamSb, SEEK_SET);
+            fread(&jl, sizeof(journal), 1, disco);
+
+
+            string textoRep;
+            string nombre = extraerNombreArchivo(obtenerRutaID(this->id));
+            string nombrePart = part.part_name;
+            int indiceJl = jl.j_permisos - 1;
+            //cout << "jlpermisos " << indiceJl << endl;
+            textoRep += "jl[label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+            textoRep += "<tr><td colspan=\"9\">Journaling de " + nombrePart + " en "  + nombre +"</td></tr>";
+            textoRep += "<tr><td>#</td><td>Tipo Operacion</td><td>Tipo</td><td>Nombre</td><td>Contenido</td><td>Fecha</td><td>UID</td><td>GID</td><td>Permisos</td></tr>\n";
+            for(int i=1; i <= indiceJl; i++){
+                fseek(disco, (inicioPart+tamSb + (i*sizeof(journal))), SEEK_SET);
+                fread(&jl, sizeof(journal), 1, disco);
+                textoRep += "<tr><td>"+to_string(i)+"</td>";
+                textoRep += "<td>"+ string(jl.j_tipo_operacion) +"</td>\n";
+                textoRep += "<td>"+ string(1, jl.j_tipo) +"</td>\n";
+                textoRep += "<td>"+ string(jl.j_nombre) +"</td>\n";
+                textoRep += "<td>"+ string(jl.j_contenido) +"</td>\n";
+                textoRep += "<td>"+ string(jl.j_fecha) +"</td>\n";
+                textoRep += "<td>"+ to_string(jl.j_userid) +"</td>\n";
+                textoRep += "<td>"+ to_string(jl.j_groupid) +"</td>\n";
+                textoRep += "<td>"+ to_string(jl.j_permisos) +"</td></tr>\n";                
+
+                //cout << jl.j_tipo_operacion << endl;
+            }
+            fclose(disco);
+            textoRep += "</table>>];";
+            crearReporte(textoRep);
+        }
+    }
+}
+
+void rep::reporteTree(){
+    obtenerInodosRec(0);
+}
 
 void rep::crearReporte(string data){
     string dataDot = "digraph { graph [pad=\"0.5\", nodesep=\"0.5\", ranksep=\"2\"]; \n node [shape=plain] \n rankdir=LR;\n";
@@ -250,3 +364,78 @@ void rep::crearReporte(string data){
     system(comando.c_str());
 }
 
+
+string rep::obtenerInodosRec(int indInodo){
+    string data;
+    superbloque sb = obtenerSuperBloque(obtenerParticionID(this->id), this->id);
+    inodo ind = obtenerInodo(this->id, indInodo);
+
+    data += "";
+    data = "Inodo"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+    data += "<tr><td colspan=\"2\">INODO</td></tr>";
+    data += "<tr><td>Propietario</td><td>"+to_string(ind.i_uid)+"</td></tr>";
+    data += "<tr><td>Grupo</td><td>"+to_string(ind.i_gid)+"</td></tr>";
+    data += "<tr><td>Tamaño</td><td>"+to_string(ind.i_size)+"</td></tr>";
+    data += "<tr><td>Tipo</td><td>"+string(1, ind.i_type)+"</td></tr>";
+    data += "<tr><td>Permisos</td><td>"+to_string(ind.i_perm)+"</td></tr>";
+    data += "<tr><td>Fecha Acceso</td><td>"+string(ind.i_atime)+"</td></tr>";
+    data += "<tr><td>Fecha Creación</td><td>"+string(ind.i_ctime)+"</td></tr>";
+    data += "<tr><td>Fecha Modificación</td><td>"+string(ind.i_mtime)+"</td></tr>";
+    for(int i = 0; i < 12; i++ ){
+        data += "<tr><td>APT"+to_string(i)+"</td><td>"+to_string(ind.i_block[i])+"</td></tr>";
+    }
+    data += "</table>>];";
+
+    for (int i = 0; i < 12; i++){
+        if(ind.i_block[i] != -1){
+            if(ind.i_type == '0'){ //bloque carpeta
+                //cout << "Entra acá Carpeta" << endl;                
+                data += bloqueCarpetaRec(ind.i_block[i]);
+            }else if(ind.i_type == '1'){ //bloque archivo
+                //cout << "Entra acá Archivo" << endl;
+                data += bloqueArchivoRec(ind.i_block[i]); 
+            }
+        }
+    }
+    return data;
+}
+
+string rep::bloqueCarpetaRec(int indInodo){
+    string dataC;
+    bloqueCarpeta bC = obtenerBloqueCarpeta(this->id, indInodo);
+
+        //cout << "bCI " << bC.b_content->b_inodo << endl;
+        //cout << "bCN " << bC.b_content->b_name << endl;
+
+        dataC += "bloqueCarpeta"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+        dataC += "<tr><td colspan=\"2\">Bloque Carpeta</td></tr>";
+        for(int i = 0; i < 4; i++){
+            dataC += "<tr><td>Nombre:</td><td>"+string(bC.b_content[i].b_name)+"</td></tr>";
+            dataC += "<tr><td>Apuntador Inodo:</td><td>"+to_string(bC.b_content[i].b_inodo)+"</td></tr>";
+        }
+        dataC += "</table>>];";
+
+        for (int i = 0; i < 4; i++){
+            if(bC.b_content[i].b_inodo != -1 && string(bC.b_content[i].b_name) != "." && string(bC.b_content[i].b_name) != ".."){
+                //cout << "R" << endl;
+                //cout << bC.b_content[i].b_inodo << endl;
+                //cout << bC.b_content[i].b_name << endl;
+                //cout << "R/" << endl;
+                dataC += obtenerInodosRec(bC.b_content[i].b_inodo);
+            }
+        }
+
+    return dataC;
+}
+
+string rep::bloqueArchivoRec(int indInodo){
+    string dataA;
+    bloqueArchivo bA = obtenerBloqueArchivo(this->id, indInodo);
+    //cout << bA.b_content << endl;
+    dataA += "bloqueArchivo"+to_string(indInodo)+" [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
+    dataA += "<tr><td colspan=\"2\">Bloque Archivo</td></tr>";
+    dataA += "<tr><td>Contenido:</td><td>"+string(bA.b_content)+"</td></tr>";
+    dataA += "</table>>];";       
+
+    return dataA;
+}

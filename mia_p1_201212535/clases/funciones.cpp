@@ -186,8 +186,8 @@ bloqueCarpeta bc;
             bc = obtenerBloqueCarpeta(id, ino.i_block[i]);
             for(int j = 0; j < 4; j++){
                 if(bc.b_content[j].b_inodo != -1){
-                    cout << "Nombreb: " << bc.b_content[j].b_name << endl;
-                    cout << "Nombreb_: " << nombre << endl;
+                    //cout << "Nombreb: " << bc.b_content[j].b_name << endl;
+                    //cout << "Nombreb_: " << nombre << endl;
                     if(bc.b_content[j].b_name == nombre){
                         return bc.b_content[j].b_inodo; //retorno el indice del nodo :)
                     }
@@ -196,6 +196,21 @@ bloqueCarpeta bc;
         }
     }
     return -1;
+}
+
+inodo obtenerInodo(string id, int indInodo){
+    Partition part = obtenerParticionID(id);
+    superbloque sb = obtenerSuperBloque(part, id);
+    int inicioInodo = sb.s_inode_start;
+    inodo ind;
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    if(disco != NULL){
+        fseek(disco, inicioInodo+(indInodo*sizeof(inodo)), SEEK_SET);
+        fread(&ind, sizeof(inodo), 1, disco);      
+    }
+    fclose(disco);
+    return ind;
 }
 
 bloqueCarpeta obtenerBloqueCarpeta(string id, int indiceBloque){
@@ -213,6 +228,7 @@ bloqueCarpeta obtenerBloqueCarpeta(string id, int indiceBloque){
     }
     return bc;
 }
+
 
 bloqueArchivo obtenerBloqueArchivo(string id, int indiceBloqueArch){
     Partition part = obtenerParticionID(id);
@@ -455,4 +471,61 @@ vector<espacioLibre> obtenerEspacioLibreDisco(string ruta){
     fclose(archivo);
     return vES;
 }
+
+int buscarIndiceRuta(inodo ino, string nombre, string id){
+bloqueCarpeta bc;
+string rutaNoexiste;
+   for(int i = 0; i < 12; i++){
+        if(ino.i_block[i] != -1){
+            bc = obtenerBloqueCarpeta(id, ino.i_block[i]);
+            for(int j = 0; j < 4; j++){
+                if(bc.b_content[j].b_inodo != -1){
+                    //cout << "Nombreeee: " << nombre << endl;
+                    //cout << "Nombreeee: " << bc.b_content[j].b_name << endl;
+                    if(bc.b_content[j].b_name == nombre || nombre.empty()){
+                        return bc.b_content[j].b_inodo; //retorno el indice del nodo :)
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+void buscarRuta(string id, string ruta){
+ Partition part = obtenerParticionID(id);
+ superbloque sb = obtenerSuperBloque(part, id);
+ int inicioInodo = sb.s_inode_start;
+ vector<string> rutaPam = split(quitarComillasRuta(ruta), "/");
+ inodo ino;
+ int indiceInodo;
+ vector <string> vRuta;
+ bloqueArchivo ba;
+
+    FILE *disco;
+    disco = fopen(quitarComillasRuta(obtenerRutaID(id)).c_str(), "rb");
+    if(disco != NULL){
+        fseek(disco, inicioInodo, SEEK_SET);
+        fread(&ino, sizeof(inodo), 1, disco);
+
+        for(int i = 1; i < rutaPam.size(); i++){
+           indiceInodo = buscarIndiceRuta(ino, rutaPam[i].c_str(), id);
+           
+           if(indiceInodo == -1){
+                vRuta.push_back(rutaPam[i].c_str());
+                //break;
+            }else{
+                cout << "A partir de: " << indiceInodo << endl;
+            }
+           //fseek(disco, inicioInodo+(indiceInodo*sizeof(inodo)), SEEK_SET);
+           //fread(&ino, sizeof(inodo), 1, disco);
+           //cout << "IndiceInodo" << indiceInodo << endl;
+        }
+    }
+
+    fclose(disco);
+}
+
+
 

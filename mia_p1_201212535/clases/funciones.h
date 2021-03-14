@@ -22,6 +22,7 @@ using namespace std;
     Partition obtenerParticionID(string id);
     superbloque obtenerSuperBloque(Partition particion, string id);
     bloqueCarpeta obtenerBloqueCarpeta(string id, int indiceBloque);
+    bloqueArchivo obtenerBloqueArchivo(string id, int indiceBloqueArch);
     int buscarInodo(string ruta, string nombre);
     bloqueArchivo buscarIno(string ruta, string id);
     string obtenerRutaID(string id);
@@ -34,5 +35,9 @@ using namespace std;
     string obtenerBitmapInodos(string idPart);
     string obtenerBitmapBloques(string idPart);
     vector<espacioLibre> obtenerEspacioLibreDisco(string ruta);
+    void buscarRuta(string id, string ruta);
+    int buscarIndiceRuta(inodo ino, string nombre, string id);
+    inodo obtenerInodo(string id, int indInodo);
+    
     
 #endif // FUNCIONES_H

@@ -15,6 +15,7 @@
 #include "clases/logout.h"
 #include "clases/rep.h"
 #include "clases/pausa.h"
+#include "clases/mkdirc.h"
 
 
 using namespace std;
@@ -29,6 +30,7 @@ std::string p_unmount[1]; // 0 = id
 std::string p_mkfs[3]; // 0 = id, 1=type, 2=fs
 std::string p_login[3]; //0=usuario, 1=password, 2=id
 std::string p_rep[4]; // 0 = name, 1 = path, 2 = id, 3 = ruta
+std::string p_mkdir[2]; //0 = ruta, 1 = p
 
 bool pPrimero = true;
 int yyerror(const char* mens)
@@ -141,6 +143,7 @@ COMANDOS: MKDISK {}
         | LOGOUT {}
         | REP {}
         | PAUSE {}
+        | MKDIR {}
         | COMENTARIO {}
 ;
 
@@ -267,6 +270,18 @@ P_REP: tk_menos tk_name tk_igual tk_cadena {p_rep[0] = $4;}
      | tk_menos tk_ruta tk_igual tk_eruta {p_rep[3] = $4;}
      | tk_menos tk_ruta tk_igual tk_cadena {p_rep[3] = $4;}
      
+;
+
+MKDIR: tk_mkdir LP_MKDIR {mkdirc mkdirc(p_mkdir); mkdirc.ejecutar(); p_mkdir[0].clear(); p_mkdir[1].clear();}
+;
+
+LP_MKDIR: P_MKDIR LP_MKDIR
+        | P_MKDIR
+;
+
+P_MKDIR: tk_menos tk_path tk_igual tk_eruta {p_mkdir[0] = $4;}
+        | tk_menos tk_path tk_igual tk_cadena {p_mkdir[0] = $4;}
+        | tk_menos tk_p {p_mkdir[1] = $2;}
 ;
 
 PAUSE: tk_pause {pausa pausa;}

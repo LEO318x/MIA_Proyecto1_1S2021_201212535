@@ -411,7 +411,7 @@ void mkfs::quemarRoot(){
     for(int i=1; i < 15; i++){
         iCarpeta.i_block[i] = -1; 
     }
-    iCarpeta.i_type = 0;
+    iCarpeta.i_type = '0';
     iCarpeta.i_perm = 664; 
 
     bloqueCarpeta bCarpeta;
@@ -440,9 +440,10 @@ void mkfs::quemarRoot(){
     for(int i=1; i < 15; i++){
         iArchivo.i_block[i] = -1; 
     }
-    iArchivo.i_type = 1;
-    iArchivo.i_perm = 664; 
+    iArchivo.i_type = '1';
+    iArchivo.i_perm = 664;
 
+    
     bloqueArchivo bArchivo;
     strcpy(bArchivo.b_content, "1,G,root\n1,U,root,root,123\n");
 
@@ -456,6 +457,8 @@ void mkfs::quemarRoot(){
     fclose(disco);
 
 }
+
+
 
 void mkfs::testInodo(superbloque sb){    
     cout << "Pos Inodo: ---> " << obtenerPosicionInodo(sb.s_inode_start, 0) << endl;

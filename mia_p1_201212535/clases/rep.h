@@ -27,6 +27,12 @@ public:
     void reporteBmBloques();
     void reporteSb();
     void reporteDisk();
+    void reporteInodo();
+    void reporteJournaling();
+    void reporteTree();
+    string obtenerInodosRec(int indInodo);
+    string bloqueCarpetaRec(int indInodo);
+    string bloqueArchivoRec(int indInodo);
 };
 
 #endif // REP_H
