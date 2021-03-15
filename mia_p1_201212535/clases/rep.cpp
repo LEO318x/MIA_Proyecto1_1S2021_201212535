@@ -219,7 +219,7 @@ void rep::reporteDisk(){
         }
     }
 
-    cout << "Tamanio Disco: " << mbr.mbr_tamano << endl;
+    /*cout << "Tamanio Disco: " << mbr.mbr_tamano << endl;
     for(int i = 0; i < vPart.size(); i++){
         if(vPart[i].tipo == 0){
             cout << "Espacio Libre: " << vPart[i].tamanio << endl;
@@ -227,19 +227,22 @@ void rep::reporteDisk(){
             cout << "Particion: " << vPart[i].tamanio << endl;
         }
         cout << "TIPO:" << vPart[i].type << endl;
-    }
+    }*/
 
-    textoRep = "DISK [label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\">\n";
-    textoRep += "<tr><td><i>DISK</i></td><td>"+ extraerNombreArchivo(obtenerRutaID(this->id)) +"</td></tr>";
-    textoRep += "<tr><td>MBR "+ to_string(static_cast<float>(sizeof(mbr))/static_cast<float>(mbr.mbr_tamano)*100)+"%</td>";
+    textoRep = "DISK [label=<<table>\n";
+    textoRep += "<tr><td bgcolor=\"darkorange\"><i>DISK</i></td><td bgcolor=\"darkorange\">"+ extraerNombreArchivo(obtenerRutaID(this->id)) +"</td></tr>\n";
+    textoRep += "<tr><td><table border=\"0\"><tr><td>MBR<br/> "+ to_string(static_cast<float>(sizeof(mbr))/static_cast<float>(mbr.mbr_tamano)*100)+"%</td></tr></table></td>\n";
     for(int i = 0; i < vPart.size(); i++){
         float operacion = (static_cast<float>(vPart[i].tamanio)/static_cast<float>(mbr.mbr_tamano))*100;
         if(toUpper(string(1, vPart[i].type)) == "V"){
-            textoRep += "<td>Libre "+to_string(operacion)+"%</td>";
+            textoRep += "<td><table border=\"0\"><tr><td>Libre<br/> "+to_string(operacion)+"%</td></tr></table></td>\n";
+            //textoRep += "<td>Libre "+to_string(operacion)+"%</td>";
         }else if(toUpper(string(1, vPart[i].type)) == "P"){
-            textoRep += "<td>Primaria "+to_string(operacion)+"%</td>";
+            textoRep += "<td><table border=\"0\"><tr><td>Primaria<br/> "+to_string(operacion)+"%</td></tr></table></td>\n";
+            //textoRep += "<td>Primaria "+to_string(operacion)+"%</td>";
         }else if(toUpper(string(1, vPart[i].type)) == "E"){
-            textoRep += "<td>Extendida "+to_string(operacion)+"%</td>";
+            textoRep += "<td><table border=\"0\"><tr><td>Extendida<br/> "+to_string(operacion)+"%</td></tr></table></td>\n";
+            //textoRep += "<td>Extendida "+to_string(operacion)+"%</td>";
         }
     }
     textoRep += "</tr>\n</table>>];";
